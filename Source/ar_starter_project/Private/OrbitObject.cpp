@@ -37,7 +37,9 @@ void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos, UARPin* ARp
 {
 	m_sphereWorld = sphereWorld;
 
-	m_initLocation = startPos;
+	m_initLocation = sphereWorld->GetActorLocation();
+
+	m_orbitTransform = startPos;
 
 	m_ARPin = ARpin;
 
@@ -61,11 +63,23 @@ void AOrbitObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector newLoc = m_sphereWorld->GetActorLocation() + m_sphereWorld->GeneratePositionOnSphere(m_initLocation);
+	UpdatePosition();
+	FacePlayer();
+}
+
+void AOrbitObject::MoveAroundSphere(FVector2D orbitAngles, float zoomLevel)
+{
+	m_orbitTransform.AddOrbitOffset(orbitAngles);
+	m_orbitTransform.orbitRadius = m_sphereWorld->m_spawnRadius + zoomLevel;
+}
+
+void AOrbitObject::UpdatePosition()
+{
+	if(!m_sphereWorld)
+		return;
+
+	FVector newLoc = m_initLocation + m_sphereWorld->GeneratePositionOnSphere(m_orbitTransform);
 
 	SetActorLocation(newLoc);
-
-	FacePlayer();
-
 }
 

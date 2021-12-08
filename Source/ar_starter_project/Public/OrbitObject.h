@@ -5,7 +5,59 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "SphereWorld.h"
+#include "Misc/App.h"
 #include "OrbitObject.generated.h"
+
+USTRUCT(BlueprintType)
+struct FOrbitTransform
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector2D orbitPosition;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float orbitRadius;
+
+	FOrbitTransform() 
+	: orbitPosition(0,0), orbitRadius(1) {}
+
+	FOrbitTransform(FVector2D orbitPos, float orbitRad) 
+	: orbitPosition(orbitPos), orbitRadius(orbitRad){}
+
+	FOrbitTransform(float t, float s, float r)
+	: orbitPosition(t,s), orbitRadius(r) {}
+
+	FOrbitTransform(FVector orbitTransform)
+	: orbitPosition(orbitTransform.X,orbitTransform.Y), orbitRadius(orbitTransform.Z){}
+
+	operator FVector() const {return FVector(orbitPosition.X, orbitPosition.Y, orbitRadius);}
+
+	FOrbitTransform& operator= (const FVector& oTransform)
+	{
+		orbitPosition.X = oTransform.X;
+		orbitPosition.Y = oTransform.Y;
+		orbitRadius = oTransform.Z;
+
+		return *this;
+	}
+
+	void AddOrbitOffset(float x, float y) { AddOrbitOffset(FVector2D(x,y));}
+
+	void AddOrbitOffset(FVector2D offset)
+	{
+		orbitPosition += offset * FApp::GetDeltaTime();
+		while (orbitPosition.X >= 360)
+			orbitPosition.X = orbitPosition.X - 360;
+		while (orbitPosition.Y >= 360)
+			orbitPosition.Y = orbitPosition.Y - 360;
+
+		while (orbitPosition.X < 0)
+			orbitPosition.X = 360 + orbitPosition.X;
+		while (orbitPosition.Y < 0)
+			orbitPosition.Y = 360 + orbitPosition.Y;
+	}
+};
 
 UCLASS()
 class AR_STARTER_PROJECT_API AOrbitObject : public AActor
@@ -32,6 +84,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UARPin* m_ARPin;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FOrbitTransform m_orbitTransform;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();
@@ -47,4 +102,12 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	inline void MoveAroundSphere(FVector moveOffset) {MoveAroundSphere(FVector2D(moveOffset.X, moveOffset.Y), moveOffset.Z);}
+	void MoveAroundSphere(FVector2D orbitAngles, float zoomLevel);
+
+	inline void MoveOrbit(FVector2D orbitDir){MoveAroundSphere(orbitDir, 0);}
+
+	inline void MoveZoom(float zoomLevel){MoveAroundSphere(FVector2D(0,0), zoomLevel);}
+
+	void UpdatePosition();
 };
