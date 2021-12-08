@@ -27,6 +27,7 @@ ACustomARPawn::ACustomARPawn()
 	CameraComponent->SetupAttachment(RootComponent);
 
 
+
 	// Timer Looping every 4 seconds
 	cameraNotifyLoopTime = 4.0f;
 
@@ -55,7 +56,7 @@ void ACustomARPawn::BeginPlay()
 	GetWorldTimerManager().SetTimer(cameraTicker, this, &ACustomARPawn::DisplayCameraInfo, cameraNotifyLoopTime, true, 0.0f);
 
 	//  Spawn Custom Actor just once:
-	SpawnCube();
+	//SpawnCube();
 	SpawnSphereWorld();
 }
 
@@ -101,7 +102,7 @@ void  ACustomARPawn::SpawnCube()
 
 void ACustomARPawn::SpawnSphereWorld()
 {
-	m_sphereWorld = GetWorld()->GetGameState<ASphereWorldGameState>()->CreateSphereWorld(GetActorTransform().GetTranslation());
+	m_sphereWorld = GetWorld()->GetGameState<ASphereWorldGameState>()->CreateSphereWorld(FVector(0,0,0), this->GetActorTransform() );
 }
 
 ASphereWorld* ACustomARPawn::GetSphereWorld()

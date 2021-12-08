@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "CustomActor.h"
+#include "OrbitObject.h"
 #include "SphereWorldGameState.generated.h"
 
 class ASphereWorld;
@@ -22,7 +22,7 @@ public:
 	inline ASphereWorld* GetSphereWorld() const { return m_sphereWorld; }
 	inline void SetSphereWorld(ASphereWorld* newSphereWorld) { m_sphereWorld = newSphereWorld; }
 
-	ASphereWorld* CreateSphereWorld(FVector worldPosition);
+	ASphereWorld* CreateSphereWorld(FVector worldPosition, FTransform trans);
 
 	void SpawnEnemy();
 
@@ -30,5 +30,5 @@ protected:
 
 	ASphereWorld* m_sphereWorld;
 
-	TArray<ACustomActor*> m_enemies;
+	TArray<AOrbitObject*> m_enemies;
 };

@@ -22,17 +22,17 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 
 	OwningHUD = inArgs._OwningHUD;
 
-	const FMargin ContentPadding = FMargin(10.0f, 10.0f);
+	const FMargin ContentPadding = FMargin(50.0f, 50.0f);
 	const FMargin ButtonPadding = FMargin(10.0f);
 
 	const FText TitleText = LOCTEXT("Debug Menu", "Debug Menu");
 	const FText PlayText = LOCTEXT("Spawn Enemy Button", "Spawn Enemy");
 
 	FSlateFontInfo ButtonTextStyle = FCoreStyle::Get().GetFontStyle("EmbossedText");
-	ButtonTextStyle.Size = 20.0f;
+	ButtonTextStyle.Size = 40.0f;
 
 	FSlateFontInfo TitleTextStyle = ButtonTextStyle;
-	TitleTextStyle.Size = 30.0f;
+	TitleTextStyle.Size = 40.0f;
 
 	ChildSlot
 	[

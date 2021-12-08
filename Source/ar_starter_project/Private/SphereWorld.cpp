@@ -11,8 +11,15 @@ ASphereWorld::ASphereWorld()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_scnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene"));
+	m_scnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("sphere world scene component"));
 	RootComponent = m_scnComponent;
+
+	m_staticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	
+	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
+	m_staticMeshComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -20,9 +27,17 @@ void ASphereWorld::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FVector Loc = GetActorTransform().GetTranslation();
+	m_staticMeshComponent->SetRelativeScale3D(FVector(0.3,0.3,0.3));
 
-	DrawDebugSphere(GetWorld(), Loc, m_spawnRadius, 26, FColor(181, 0, 0), true, 999, 0, 1);
+	//SetActorScale3D(FVector(0.2,0.2,0.2));
+//#ifdef PLATFORM_WINDOWS
+
+
+	//FVector Loc = GetActorTransform().GetTranslation();
+
+	//DrawDebugSphere(GetWorld(), Loc, m_spawnRadius, 26, FColor(181, 0, 0), true, 999, 0, 1);
+
+//#endif // PLATFORM_WINDOWS
 }
 
 // Called every frame
@@ -30,6 +45,9 @@ void ASphereWorld::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//FVector Loc = GetActorTransform().GetTranslation();
+
+	//DrawDebugSphere(GetWorld(), Loc, m_spawnRadius, 26, FColor(181, 0, 0), true, 1, 0, 1);
 }
 
 // Generates point on a sphere of radius [r] using latitude angle [t] and longitude angle [s]

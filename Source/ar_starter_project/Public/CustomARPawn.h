@@ -38,6 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCameraComponent* CameraComponent;
 
+
 	virtual void DisplayCameraInfo();
 	virtual void SpawnCube();
 

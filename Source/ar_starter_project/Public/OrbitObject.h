@@ -18,6 +18,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ASphereWorld* m_sphereWorld;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FVector m_initLocation;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USceneComponent* m_scnComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* m_staticMeshComponent;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UARPin* m_ARPin;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();
@@ -27,7 +41,7 @@ protected:
 
 public:	
 
-	void Init(ASphereWorld* sphereWorld, FVector startPos);
+	void Init(ASphereWorld* sphereWorld, FVector startPos, UARPin* ARpin);
 
 	void FacePlayer();
 
