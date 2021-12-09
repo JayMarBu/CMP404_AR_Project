@@ -59,7 +59,7 @@ void ACustomARPawn::BeginPlay()
 #endif
 
 	// Start my timer:
-	GetWorldTimerManager().SetTimer(cameraTicker, this, &ACustomARPawn::DisplayCameraInfo, cameraNotifyLoopTime, true, 0.0f);
+	//GetWorldTimerManager().SetTimer(cameraTicker, this, &ACustomARPawn::DisplayCameraInfo, cameraNotifyLoopTime, true, 0.0f);
 
 	//  Spawn Custom Actor just once:
 	//SpawnCube();
@@ -146,8 +146,8 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 	FVector worldDirection;
 	bool deprojectionSuccess = UGameplayStatics::DeprojectScreenToWorld(playerController, (FVector2D)screenPos, /*out*/worldPosition, /*out*/worldDirection);
 
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray Dir [%f, %f, %f]"),worldDirection.X, worldDirection.Y, worldDirection.Z));
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray pos [%f, %f, %f]"), worldPosition.X, worldPosition.Y, worldPosition.Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray Dir [%f, %f, %f]"),worldDirection.X, worldDirection.Y, worldDirection.Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray pos [%f, %f, %f]"), worldPosition.X, worldPosition.Y, worldPosition.Z));
 
 	if (ProjectileClass)
 	{
@@ -165,7 +165,7 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 		{
 			// Set the projectile's initial trajectory.
 			FVector LaunchDirection = camRot.Vector();
-			Projectile->FireInDirection(LaunchDirection);
+			Projectile->FireInDirection(LaunchDirection, m_sphereWorld, ProjectileShooter::PLAYER);
 		}
 	}
 

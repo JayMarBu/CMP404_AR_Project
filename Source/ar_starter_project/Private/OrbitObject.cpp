@@ -3,6 +3,7 @@
 
 #include "OrbitObject.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "SphereWorldGameState.h"
 
 // Sets default values
 AOrbitObject::AOrbitObject()
@@ -22,6 +23,11 @@ AOrbitObject::AOrbitObject()
 
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
+	m_staticMeshComponent->SetSimulatePhysics(true);
+	m_staticMeshComponent->SetEnableGravity(false);
+	m_staticMeshComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
+
+	//m_staticMeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 // Called when the game starts or when spawned
@@ -83,5 +89,11 @@ void AOrbitObject::UpdatePosition()
 	FVector newLoc = m_sphereWorld->GetActorLocation() + m_sphereWorld->GeneratePositionOnSphere(m_orbitTransform);
 
 	SetActorLocation(newLoc);
+}
+
+void AOrbitObject::BroadcastHit()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("You Hit Something")));
+	m_onProjectileHitDelegate.Broadcast();
 }
 

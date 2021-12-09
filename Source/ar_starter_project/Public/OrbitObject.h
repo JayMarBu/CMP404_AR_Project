@@ -8,6 +8,8 @@
 #include "Misc/App.h"
 #include "OrbitObject.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileHitDelegate);
+
 USTRUCT(BlueprintType)
 struct FOrbitTransform
 {
@@ -77,7 +79,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USceneComponent* m_scnComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_staticMeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -85,6 +87,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool hasControllerComponent = false;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnProjectileHitDelegate m_onProjectileHitDelegate;
 
 	//Methods *************************************************************************************
 public:	
@@ -109,4 +114,6 @@ public:
 	inline void MoveZoom(float zoomLevel){MoveAroundSphere(FVector2D(0,0), zoomLevel);}
 
 	void UpdatePosition();
+
+	void BroadcastHit();
 };

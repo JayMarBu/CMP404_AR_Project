@@ -5,6 +5,11 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Math/Vector.h"
+#include "SphereWorld.h"
+#include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+#include"Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
+#include"Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "OrbitObject.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -21,8 +26,10 @@ AProjectile::AProjectile()
 	{
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
-		float radius = 15.0f;
+		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+		CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
+		float radius = 15.0f;
 		CollisionComponent->InitSphereRadius(radius);
 
 		RootComponent = CollisionComponent;
@@ -56,7 +63,7 @@ AProjectile::AProjectile()
 		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 	}
 
-	
+	InitialLifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -71,11 +78,36 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	if (FVector::Dist(this->GetActorLocation(), sphereWorld->GetActorLocation()) > sphereWorld->m_spawnRadius*0.15f)
+	{
+		// despawn object
+	}
 }
 
-void AProjectile::FireInDirection(FVector ShootDirection)
+void AProjectile::FireInDirection(FVector ShootDirection, ASphereWorld* in_sphereWorld, ProjectileShooter in_projectileType)
 {
 	ShootDirection.Normalize();
 	ProjectileMovementComponent->Velocity = ShootDirection*ProjectileMovementComponent->InitialSpeed;
+
+	sphereWorld = in_sphereWorld;
+	projectileType = in_projectileType;
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	{
+		UClass* HitActorClass = UGameplayStatics::GetObjectClass(Hit.GetActor());
+		if (UKismetMathLibrary::ClassIsChildOf(HitActorClass, AOrbitObject::StaticClass()) && projectileType == ProjectileShooter::PLAYER)
+		{
+			AOrbitObject* actor = static_cast<AOrbitObject*>(OtherActor);
+			
+			actor->BroadcastHit();
+		}
+		// else if hit player
+	}
+
+	Destroy();
 }
 

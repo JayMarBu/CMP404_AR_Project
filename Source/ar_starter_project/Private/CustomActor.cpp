@@ -16,12 +16,14 @@ ACustomActor::ACustomActor()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 
 	// Get mesh from Unreal's Reference  Manager. (Right click on object and Get Reference"
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 	//static ConstructorHelpers::FObjectFinder<UMaterial> MeshAsset(TEXT("Material'/Game/HandheldARBP/Materials/M_BackgroundFade.M_BackgroundFade'"));
 
 	StaticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	StaticMeshComponent->SetupAttachment(RootComponent);
-
+	StaticMeshComponent->SetSimulatePhysics(true);
+	StaticMeshComponent->SetEnableGravity(false);
+	StaticMeshComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
 }
 
 // Called when the game starts or when spawned
@@ -35,7 +37,7 @@ void ACustomActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	SetActorScale3D(FVector(0.3, 0.3, 0.3));
+	//SetActorScale3D(FVector(0.3, 0.3, 0.3));
 
 	initLocation = GetActorLocation();
 

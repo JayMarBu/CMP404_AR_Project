@@ -8,6 +8,13 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class ASphereWorld;
+
+enum class ProjectileShooter
+{
+	ENEMY,
+	PLAYER
+};
 
 UCLASS()
 class AR_STARTER_PROJECT_API AProjectile : public AActor
@@ -25,6 +32,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 		UStaticMeshComponent* ProjectileMeshComponent;
 
+		ASphereWorld* sphereWorld;
+
+		ProjectileShooter projectileType;
 	// Methods ************************************************************************************
 public:	
 	// Sets default values for this actor's properties
@@ -38,6 +48,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void FireInDirection(FVector ShootDirection);
+	void FireInDirection(FVector ShootDirection, ASphereWorld* in_sphereWorld, ProjectileShooter in_projectileType);
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 };
