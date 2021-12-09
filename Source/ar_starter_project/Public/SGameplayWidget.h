@@ -26,5 +26,7 @@ public:
 
 	bool SupportsKeyboardFocus() const override { return true; }
 
-	FReply OnPlayClicked() const;
+	FReply OnSpawnEnemyDefault() const;
+
+	FReply OnSpawnBaseControllerEnemy() const;
 };

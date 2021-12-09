@@ -25,6 +25,7 @@ public:
 	ASphereWorld* CreateSphereWorld(FVector worldPosition, FTransform trans);
 
 	void SpawnEnemy();
+	void SpawnControllerEnemy();
 
 protected:
 

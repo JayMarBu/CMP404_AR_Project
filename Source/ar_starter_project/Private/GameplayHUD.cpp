@@ -21,6 +21,11 @@ void AGameplayHUD::SpawnEnemy()
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnEnemy();
 }
 
+void AGameplayHUD::SpawnControllerEnemy()
+{
+	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnControllerEnemy();
+}
+
 void AGameplayHUD::ShowMenu()
 {
 	if (GEngine && GEngine->GameViewport)

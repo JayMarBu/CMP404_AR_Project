@@ -24,6 +24,7 @@ protected:
 public: 
 
 	void SpawnEnemy();
+	void SpawnControllerEnemy();
 
 	void ShowMenu();
 	void RemoveMenu();

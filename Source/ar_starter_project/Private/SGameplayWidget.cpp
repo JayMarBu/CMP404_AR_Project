@@ -29,6 +29,7 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 
 	const FText TitleText = LOCTEXT("Debug Menu", "Debug Menu");
 	const FText PlayText = LOCTEXT("Spawn Enemy Button", "Spawn Enemy");
+	const FText SpawnControllerText = LOCTEXT("Spawn Enemy with controller Button", "Spawn Enemy with brain");
 
 	FSlateFontInfo ButtonTextStyle = FCoreStyle::Get().GetFontStyle("EmbossedText");
 	ButtonTextStyle.Size = 40.0f;
@@ -63,16 +64,28 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 			]
 
 			// Spawn Enemy Button
-			+ SVerticalBox::Slot().Padding(ButtonPadding)[BASIC_BUTTON(PlayText, ButtonTextStyle, ETextJustify::Center, SGameplayWidget::OnPlayClicked)]
+			+ SVerticalBox::Slot().Padding(ButtonPadding)[BASIC_BUTTON(PlayText, ButtonTextStyle, ETextJustify::Center, SGameplayWidget::OnSpawnEnemyDefault)]
+
+			+ SVerticalBox::Slot().Padding(ButtonPadding)[BASIC_BUTTON(SpawnControllerText, ButtonTextStyle, ETextJustify::Center, SGameplayWidget::OnSpawnBaseControllerEnemy)]
 		]
 	];
 }
 
-FReply SGameplayWidget::OnPlayClicked() const
+FReply SGameplayWidget::OnSpawnEnemyDefault() const
 {
 	if (OwningHUD.IsValid())
 	{
 		OwningHUD->SpawnEnemy();
+	}
+
+	return FReply::Handled();
+}
+
+FReply SGameplayWidget::OnSpawnBaseControllerEnemy() const
+{
+	if (OwningHUD.IsValid())
+	{
+		OwningHUD->SpawnControllerEnemy();
 	}
 
 	return FReply::Handled();

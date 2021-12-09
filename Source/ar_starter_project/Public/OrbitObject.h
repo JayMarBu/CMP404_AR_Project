@@ -62,6 +62,7 @@ struct FOrbitTransform
 };
 
 class USphereComponent;
+class UOrbitObjectControllerBase;
 
 UCLASS()
 class AR_STARTER_PROJECT_API AOrbitObject : public AActor
@@ -86,6 +87,9 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly)
 	USphereComponent* m_collisionComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UOrbitObjectControllerBase* m_controllerComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FOrbitTransform m_orbitTransform;
@@ -121,4 +125,22 @@ public:
 	void UpdatePosition();
 
 	void BroadcastHit();
+
+	template <class ComponentClass>
+	void AddControllerComponent();
+
 };
+
+template <class ComponentClass>
+void AOrbitObject::AddControllerComponent()
+{
+	FName componentName("Controller Component");
+
+	m_controllerComponent = NewObject<ComponentClass>(this, ComponentClass::StaticClass(), componentName);
+	m_controllerComponent->Init(this);
+	m_controllerComponent->RegisterComponent();
+}
+
+
+
+

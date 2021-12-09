@@ -42,13 +42,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCameraComponent* CameraComponent;
 
-
-	virtual void DisplayCameraInfo();
-	virtual void SpawnCube();
-
 	virtual void SpawnSphereWorld();
-
-	virtual ASphereWorld* GetSphereWorld();
 
 	virtual FVector GetViewLocation();
 

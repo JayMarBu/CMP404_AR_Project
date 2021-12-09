@@ -4,7 +4,7 @@
 #include "OrbitObject.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SphereWorldGameState.h"
-
+#include "OrbitObjectControllers/OrbitObjectControllerBase.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -21,16 +21,10 @@ AOrbitObject::AOrbitObject()
 
 	// Get mesh from Unreal's Reference  Manager. (Right click on object and Get Reference"
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	//static ConstructorHelpers::FObjectFinder<UMaterial> MeshAsset(TEXT("Material'/Game/HandheldARBP/Materials/M_BackgroundFade.M_BackgroundFade'"));
 
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
 	m_staticMeshComponent->SetRelativeScale3D(FVector(0.1,0.5,0.5));
-	//m_staticMeshComponent->SetSimulatePhysics(true);
-	//m_staticMeshComponent->SetEnableGravity(false);
-	//m_staticMeshComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
-
-	//m_staticMeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
 	if (!m_collisionComponent)
 	{

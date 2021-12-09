@@ -58,11 +58,6 @@ void ACustomARPawn::BeginPlay()
 
 #endif
 
-	// Start my timer:
-	//GetWorldTimerManager().SetTimer(cameraTicker, this, &ACustomARPawn::DisplayCameraInfo, cameraNotifyLoopTime, true, 0.0f);
-
-	//  Spawn Custom Actor just once:
-	//SpawnCube();
 	SpawnSphereWorld();
 }
 
@@ -83,50 +78,10 @@ void ACustomARPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ACustomARPawn::OnScreenTouch);
 }
 
-// Print current camera orientation as debug message.
-void ACustomARPawn::DisplayCameraInfo()
-{
-	// vars for camera location and rotation.
-	FVector camLoc;
-	FRotator camRot;
-
-	// get camera details
-	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(camLoc, camRot);
-
-	// Convert rotation into a vector as camera orientation
-	FVector camOri = camRot.Vector();
-
-	FVector pawnPos = this->GetActorLocation();
-	FVector spherePos = m_sphereWorld->GetActorLocation();
-	FVector playerPos = camLoc;
-
-	// Print to screen
-	//UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Camera orientation: (%f, %f, %f)"), camOri.X, camOri.Y, camOri.Z), true, true, FLinearColor(0, 0.66, 1, 1), 5);
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Blue, FString::Printf(TEXT("Camera orientation: (%f, %f, %f)"), camOri.X, camOri.Y, camOri.Z));
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Blue, FString::Printf(TEXT("Pawn Position: [%f, %f, %f]\nsphere position [%f, %f, %f] \nplayer position [%f, %f, %f]"), 
-		pawnPos.X, pawnPos.Y, pawnPos.Z,
-		spherePos.X, spherePos.Y, spherePos.Z,
-		playerPos.X, playerPos.Y, playerPos.Z
-	));
-}
-
-void  ACustomARPawn::SpawnCube()
-{
-	FActorSpawnParameters SpawnInfo;
-	FRotator myRot(0, 0, 0);
-	FVector myLoc(0, 0, 0);
-	ACustomActor* customActor = GetWorld()->SpawnActor<ACustomActor>(this->GetActorLocation(), myRot, SpawnInfo);
-}
-
 void ACustomARPawn::SpawnSphereWorld()
 {
 	m_sphereWorld = GetWorld()->GetGameState<ASphereWorldGameState>()->CreateSphereWorld(FVector(0,0,0), this->GetActorTransform() );
 	m_sphereWorld->m_player = this;
-}
-
-ASphereWorld* ACustomARPawn::GetSphereWorld()
-{
-	return nullptr;
 }
 
 FVector ACustomARPawn::GetViewLocation()
