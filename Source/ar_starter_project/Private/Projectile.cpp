@@ -96,7 +96,7 @@ void AProjectile::FireInDirection(FVector ShootDirection, ASphereWorld* in_spher
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	if (OtherActor != this)
 	{
 		UClass* HitActorClass = UGameplayStatics::GetObjectClass(Hit.GetActor());
 		if (UKismetMathLibrary::ClassIsChildOf(HitActorClass, AOrbitObject::StaticClass()) && projectileType == ProjectileShooter::PLAYER)

@@ -61,6 +61,8 @@ struct FOrbitTransform
 	}
 };
 
+class USphereComponent;
+
 UCLASS()
 class AR_STARTER_PROJECT_API AOrbitObject : public AActor
 {
@@ -81,6 +83,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_staticMeshComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	USphereComponent* m_collisionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FOrbitTransform m_orbitTransform;

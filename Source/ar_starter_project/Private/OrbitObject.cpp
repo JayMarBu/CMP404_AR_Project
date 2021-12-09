@@ -5,6 +5,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "SphereWorldGameState.h"
 
+#include "Components/SphereComponent.h"
+
 // Sets default values
 AOrbitObject::AOrbitObject()
 {
@@ -23,19 +25,30 @@ AOrbitObject::AOrbitObject()
 
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
-	m_staticMeshComponent->SetSimulatePhysics(true);
-	m_staticMeshComponent->SetEnableGravity(false);
-	m_staticMeshComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
+	m_staticMeshComponent->SetRelativeScale3D(FVector(0.1,0.5,0.5));
+	//m_staticMeshComponent->SetSimulatePhysics(true);
+	//m_staticMeshComponent->SetEnableGravity(false);
+	//m_staticMeshComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
 
 	//m_staticMeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+
+	if (!m_collisionComponent)
+	{
+		m_collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+
+		m_collisionComponent->BodyInstance.SetCollisionProfileName(TEXT("OrbitObject"));
+
+		float radius = 35.0f;
+		m_collisionComponent->InitSphereRadius(radius);
+
+		m_collisionComponent->SetupAttachment(RootComponent);
+	}
 }
 
 // Called when the game starts or when spawned
 void AOrbitObject::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetActorScale3D(FVector(0.1f,0.5f,0.5f));
 	
 }
 
