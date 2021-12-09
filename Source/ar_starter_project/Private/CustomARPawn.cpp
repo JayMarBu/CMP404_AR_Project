@@ -136,18 +136,10 @@ FVector ACustomARPawn::GetViewLocation()
 
 void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos)
 {
-	//PRINT_DEBUG_LINE("screen touched", FLinearColor(0,0.66,1,1));
-
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, FString::Printf(TEXT("screen touched")));
-
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
-	// Perform deprojection taking 2d clicked area and generating reference in 3d world-space.
 	FVector worldPosition;
 	FVector worldDirection;
 	bool deprojectionSuccess = UGameplayStatics::DeprojectScreenToWorld(playerController, (FVector2D)screenPos, /*out*/worldPosition, /*out*/worldDirection);
-
-	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray Dir [%f, %f, %f]"),worldDirection.X, worldDirection.Y, worldDirection.Z));
-	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray pos [%f, %f, %f]"), worldPosition.X, worldPosition.Y, worldPosition.Z));
 
 	if (ProjectileClass)
 	{
@@ -159,34 +151,13 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetInstigator();
 
-		// Spawn the projectile at the muzzle.
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, loc, camRot, SpawnParams);
 		if (Projectile)
 		{
-			// Set the projectile's initial trajectory.
-			FVector LaunchDirection = camRot.Vector();
+			FVector LaunchDirection = worldDirection;//camRot.Vector();
 			Projectile->FireInDirection(LaunchDirection, m_sphereWorld, ProjectileShooter::PLAYER);
 		}
 	}
-
-	/*FHitResult result;
-	if (!WorlditTest((FVector2D)screenPos, result))
-	{
-		UKismetSystemLibrary::PrintString(this, "Nothing pressed", true, true, FLinearColor(0, 0.66, 1, 1), 2);
-		return;
-	}
-
-	// Get object of actor hit.
-	UClass* hitActorClass = UGameplayStatics::GetObjectClass(result.GetActor());
-	// if we've hit a target.
-	if (UKismetMathLibrary::ClassIsChildOf(hitActorClass, ACustomActor::StaticClass()))
-	{
-		ACustomActor* actor = static_cast<ACustomActor*>(result.GetActor());
-		if (actor->myType == ACustomActor::Type::CUBE)
-			UKismetSystemLibrary::PrintString(this, "Cube clicked!", true, true, FLinearColor(0, 0.66, 1, 1), 2);
-		else
-			UKismetSystemLibrary::PrintString(this, "Sphere clicked!", true, true, FLinearColor(0, 0.66, 1, 1), 2);
-	}*/
 }
 
 void ACustomARPawn::OnActionTap()
