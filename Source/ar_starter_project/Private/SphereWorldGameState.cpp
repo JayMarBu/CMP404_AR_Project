@@ -6,6 +6,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "ARBlueprintLibrary.h"
 #include "OrbitObjectControllers/OrbitObjectControllerBase.h"
+#include "OrbitObjectControllers/BasicEnemyController.h"
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
@@ -56,7 +57,7 @@ void ASphereWorldGameState::SpawnControllerEnemy()
 
 	customActor->Init(m_sphereWorld, FVector(t, s, m_sphereWorld->m_spawnRadius));
 
-	customActor->AddControllerComponent<UOrbitObjectControllerBase>();
+	customActor->AddControllerComponent<UBasicEnemyController>();
 
 	//customActor->m_controllerComponent = CreateDefaultSubobject<UOrbitObjectControllerBase>(TEXT("Controller component"));
 	//customActor->m_controllerComponent->Init(customActor);

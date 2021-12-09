@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "SphereWorld.h"
 #include "Misc/App.h"
+#include "OrbitObjectControllers/OrbitObjectControllerBase.h"
 #include "OrbitObject.generated.h"
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnProjectileHitDelegate);
 
@@ -62,7 +64,6 @@ struct FOrbitTransform
 };
 
 class USphereComponent;
-class UOrbitObjectControllerBase;
 
 UCLASS()
 class AR_STARTER_PROJECT_API AOrbitObject : public AActor

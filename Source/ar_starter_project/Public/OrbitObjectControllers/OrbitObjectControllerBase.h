@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "OrbitObject.h"
 #include "OrbitObjectControllerBase.generated.h"
 
-
+class AOrbitObject;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class AR_STARTER_PROJECT_API UOrbitObjectControllerBase : public UActorComponent
@@ -34,7 +33,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION()
 	virtual void OnHitCallback();
 
-	void Init(AOrbitObject* obj);
+	virtual void Init(AOrbitObject* obj);
 };

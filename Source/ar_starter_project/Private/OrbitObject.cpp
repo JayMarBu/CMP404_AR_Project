@@ -4,7 +4,6 @@
 #include "OrbitObject.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SphereWorldGameState.h"
-#include "OrbitObjectControllers/OrbitObjectControllerBase.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -100,7 +99,6 @@ void AOrbitObject::UpdatePosition()
 
 void AOrbitObject::BroadcastHit()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("You Hit Something")));
 	m_onProjectileHitDelegate.Broadcast();
 }
 
