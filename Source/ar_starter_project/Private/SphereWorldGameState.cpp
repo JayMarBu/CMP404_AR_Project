@@ -19,8 +19,6 @@ ASphereWorld* ASphereWorldGameState::CreateSphereWorld(FVector worldPosition, FT
 	FRotator myRot(0, 0, 0);
 	m_sphereWorld = GetWorld()->SpawnActor<ASphereWorld>(worldPosition, myRot, SpawnInfo);
 
-	m_sphereWorld->m_ARPin = UARBlueprintLibrary::PinComponent(m_sphereWorld->m_scnComponent, trans);
-
 	return m_sphereWorld;
 }
 
@@ -35,11 +33,9 @@ void ASphereWorldGameState::SpawnEnemy()
 	FActorSpawnParameters SpawnInfo;
 	FRotator myRot(0, 0, 0);
 	FVector myLoc = m_sphereWorld->GeneratePositionOnSphere(t, s, m_sphereWorld->m_spawnRadius);
-	AOrbitObject* customActor = GetWorld()->SpawnActor<AOrbitObject>(m_sphereWorld->GetActorLocation() + myLoc, myRot, SpawnInfo);
+	AOrbitObject* customActor = GetWorld()->SpawnActor<AOrbitObject>(m_sphereWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
 
-	UARBlueprintLibrary::PinComponentToARPin(customActor->m_scnComponent, m_sphereWorld->m_ARPin);
-
-	customActor->Init(m_sphereWorld, FVector(t, s, m_sphereWorld->m_spawnRadius), m_sphereWorld->m_ARPin);
+	customActor->Init(m_sphereWorld, FVector(t, s, m_sphereWorld->m_spawnRadius));
 
 	m_enemies.Add(customActor);
 }

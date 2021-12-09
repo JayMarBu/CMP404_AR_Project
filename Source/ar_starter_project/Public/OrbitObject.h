@@ -80,10 +80,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* m_staticMeshComponent;
 
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UARPin* m_ARPin;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FOrbitTransform m_orbitTransform;
 
@@ -96,7 +92,7 @@ protected:
 
 public:	
 
-	void Init(ASphereWorld* sphereWorld, FVector startPos, UARPin* ARpin);
+	void Init(ASphereWorld* sphereWorld, FVector startPos);
 
 	void FacePlayer();
 

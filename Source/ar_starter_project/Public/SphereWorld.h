@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 #include "ARBlueprintLibrary.h"
+#include "CustomARPawn.h"
 #include "SphereWorld.generated.h"
 
 
@@ -29,13 +30,10 @@ public:
 	UStaticMeshComponent* m_staticMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sphere World Information")
-	float m_spawnRadius = 500;
+	float m_spawnRadius = 250;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sphere World Information")
-	AActor* m_player;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UARPin* m_ARPin;
+	ACustomARPawn* m_player;
 
 	// Methods ************************************************************************************
 

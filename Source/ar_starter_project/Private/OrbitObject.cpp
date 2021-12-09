@@ -29,19 +29,17 @@ void AOrbitObject::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetActorScale3D(FVector(0.1f,1,1));
+	SetActorScale3D(FVector(0.1f,0.5f,0.5f));
 	
 }
 
-void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos, UARPin* ARpin)
+void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos)
 {
 	m_sphereWorld = sphereWorld;
 
-	m_initLocation = sphereWorld->GetActorLocation();
+	m_initLocation = sphereWorld->m_player->GetActorLocation();
 
 	m_orbitTransform = startPos;
-
-	m_ARPin = ARpin;
 
 	FVector newLoc = m_sphereWorld->GetActorLocation() + m_sphereWorld->GeneratePositionOnSphere(m_initLocation);
 
@@ -54,7 +52,7 @@ void AOrbitObject::FacePlayer()
 		return;
 
 	// face the player object
-	FRotator lookatRot = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), m_sphereWorld->GetActorLocation());
+	FRotator lookatRot = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), m_sphereWorld->m_player->GetActorLocation());
 
 	this->SetActorRotation(lookatRot);
 }
@@ -78,7 +76,7 @@ void AOrbitObject::UpdatePosition()
 	if(!m_sphereWorld)
 		return;
 
-	FVector newLoc = m_initLocation + m_sphereWorld->GeneratePositionOnSphere(m_orbitTransform);
+	FVector newLoc = m_sphereWorld->GetActorLocation() + m_sphereWorld->GeneratePositionOnSphere(m_orbitTransform);
 
 	SetActorLocation(newLoc);
 }

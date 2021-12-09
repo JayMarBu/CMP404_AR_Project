@@ -65,6 +65,9 @@ void ACustomARPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FRotator camRot;
+	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(m_viewLocation, camRot);
+
 }
 
 // Called to bind functionality to input
@@ -87,25 +90,40 @@ void ACustomARPawn::DisplayCameraInfo()
 	// Convert rotation into a vector as camera orientation
 	FVector camOri = camRot.Vector();
 
+	FVector pawnPos = this->GetActorLocation();
+	FVector spherePos = m_sphereWorld->GetActorLocation();
+	FVector playerPos = camLoc;
+
 	// Print to screen
 	//UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Camera orientation: (%f, %f, %f)"), camOri.X, camOri.Y, camOri.Z), true, true, FLinearColor(0, 0.66, 1, 1), 5);
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Blue, FString::Printf(TEXT("Camera orientation: (%f, %f, %f)"), camOri.X, camOri.Y, camOri.Z));
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Blue, FString::Printf(TEXT("Pawn Position: [%f, %f, %f]\nsphere position [%f, %f, %f] \nplayer position [%f, %f, %f]"), 
+		pawnPos.X, pawnPos.Y, pawnPos.Z,
+		spherePos.X, spherePos.Y, spherePos.Z,
+		playerPos.X, playerPos.Y, playerPos.Z
+	));
 }
 
 void  ACustomARPawn::SpawnCube()
 {
 	FActorSpawnParameters SpawnInfo;
 	FRotator myRot(0, 0, 0);
-	FVector myLoc(150, 0, 0);
-	ACustomActor* customActor = GetWorld()->SpawnActor<ACustomActor>(myLoc, myRot, SpawnInfo);
+	FVector myLoc(0, 0, 0);
+	ACustomActor* customActor = GetWorld()->SpawnActor<ACustomActor>(this->GetActorLocation(), myRot, SpawnInfo);
 }
 
 void ACustomARPawn::SpawnSphereWorld()
 {
 	m_sphereWorld = GetWorld()->GetGameState<ASphereWorldGameState>()->CreateSphereWorld(FVector(0,0,0), this->GetActorTransform() );
+	m_sphereWorld->m_player = this;
 }
 
 ASphereWorld* ACustomARPawn::GetSphereWorld()
 {
 	return nullptr;
+}
+
+FVector ACustomARPawn::GetViewLocation()
+{
+	return m_viewLocation;
 }

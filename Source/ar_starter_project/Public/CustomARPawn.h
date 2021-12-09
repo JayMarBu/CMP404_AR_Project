@@ -46,11 +46,15 @@ public:
 
 	virtual ASphereWorld* GetSphereWorld();
 
+	virtual FVector GetViewLocation();
+
 private:
 
 	FTimerHandle cameraTicker;
 	float cameraNotifyLoopTime;
 
 	ASphereWorld* m_sphereWorld;
+
+	FVector m_viewLocation;
 
 };
