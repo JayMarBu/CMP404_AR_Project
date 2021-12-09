@@ -9,8 +9,13 @@
 #include "DrawDebugHelpers.h"
 #include "SphereWorldGameState.h"
 #include "SphereWorld.h"
-//#include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
-//#include "Runtime/Engine/Classes/Kismet/KiMath.h"
+#include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+//#include "Kismet/KismetMathLibrary.h"
+
+
+#define PRINT_DEBUG_LINE_TIME(_line_, _colour_, _time_) UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT(_line_)), true, true, _colour_, _time_)
+#define PRINT_DEBUG_LINE(_line_, _colour_) PRINT_DEBUG_LINE_TIME(_line_, _colour_, 10)
+
 
 // Sets default values
 ACustomARPawn::ACustomARPawn()
@@ -27,6 +32,7 @@ ACustomARPawn::ACustomARPawn()
 	CameraComponent->SetupAttachment(RootComponent);
 
 
+	ProjectileClass = AProjectile::StaticClass();
 
 	// Timer Looping every 4 seconds
 	cameraNotifyLoopTime = 4.0f;
@@ -74,7 +80,7 @@ void ACustomARPawn::Tick(float DeltaTime)
 void ACustomARPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &ACustomARPawn::OnScreenTouch);
 }
 
 // Print current camera orientation as debug message.
@@ -126,4 +132,82 @@ ASphereWorld* ACustomARPawn::GetSphereWorld()
 FVector ACustomARPawn::GetViewLocation()
 {
 	return m_viewLocation;
+}
+
+void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos)
+{
+	//PRINT_DEBUG_LINE("screen touched", FLinearColor(0,0.66,1,1));
+
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, FString::Printf(TEXT("screen touched")));
+
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	// Perform deprojection taking 2d clicked area and generating reference in 3d world-space.
+	FVector worldPosition;
+	FVector worldDirection;
+	bool deprojectionSuccess = UGameplayStatics::DeprojectScreenToWorld(playerController, (FVector2D)screenPos, /*out*/worldPosition, /*out*/worldDirection);
+
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray Dir [%f, %f, %f]"),worldDirection.X, worldDirection.Y, worldDirection.Z));
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, FString::Printf(TEXT("Ray pos [%f, %f, %f]"), worldPosition.X, worldPosition.Y, worldPosition.Z));
+
+	if (ProjectileClass)
+	{
+		FRotator camRot;
+		FVector loc;
+		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(loc, camRot);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		// Spawn the projectile at the muzzle.
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, loc, camRot, SpawnParams);
+		if (Projectile)
+		{
+			// Set the projectile's initial trajectory.
+			FVector LaunchDirection = camRot.Vector();
+			Projectile->FireInDirection(LaunchDirection);
+		}
+	}
+
+	/*FHitResult result;
+	if (!WorlditTest((FVector2D)screenPos, result))
+	{
+		UKismetSystemLibrary::PrintString(this, "Nothing pressed", true, true, FLinearColor(0, 0.66, 1, 1), 2);
+		return;
+	}
+
+	// Get object of actor hit.
+	UClass* hitActorClass = UGameplayStatics::GetObjectClass(result.GetActor());
+	// if we've hit a target.
+	if (UKismetMathLibrary::ClassIsChildOf(hitActorClass, ACustomActor::StaticClass()))
+	{
+		ACustomActor* actor = static_cast<ACustomActor*>(result.GetActor());
+		if (actor->myType == ACustomActor::Type::CUBE)
+			UKismetSystemLibrary::PrintString(this, "Cube clicked!", true, true, FLinearColor(0, 0.66, 1, 1), 2);
+		else
+			UKismetSystemLibrary::PrintString(this, "Sphere clicked!", true, true, FLinearColor(0, 0.66, 1, 1), 2);
+	}*/
+}
+
+void ACustomARPawn::OnActionTap()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, FString::Printf(TEXT("screen tapped")));
+}
+
+bool ACustomARPawn::WorlditTest(const FVector2D screenPos, FHitResult& /*out*/result)
+{
+	// Get player controller
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	// Perform deprojection taking 2d clicked area and generating reference in 3d world-space.
+	FVector worldPosition;
+	FVector worldDirection;
+	bool deprojectionSuccess = UGameplayStatics::DeprojectScreenToWorld(playerController, screenPos, /*out*/worldPosition, /*out*/worldDirection);
+
+	// construct trace vector (from point clicked to 1000.0 units beyond in same direction)
+	FVector traceVector = worldDirection * 1000.0;
+	traceVector = worldPosition + traceVector;
+	// perform line trace
+	bool traceSuccess = GetWorld()->LineTraceSingleByChannel(result, worldPosition, traceVector, ECollisionChannel::ECC_WorldDynamic);
+	// return if the operation was successful
+	return traceSuccess;
 }

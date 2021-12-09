@@ -83,6 +83,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FOrbitTransform m_orbitTransform;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool hasControllerComponent = false;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();

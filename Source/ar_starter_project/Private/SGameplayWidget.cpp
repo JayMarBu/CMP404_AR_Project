@@ -25,6 +25,8 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 	const FMargin ContentPadding = FMargin(50.0f, 50.0f);
 	const FMargin ButtonPadding = FMargin(10.0f);
 
+	const EVisibility BackgroundVisibility = EVisibility::HitTestInvisible;
+
 	const FText TitleText = LOCTEXT("Debug Menu", "Debug Menu");
 	const FText PlayText = LOCTEXT("Spawn Enemy Button", "Spawn Enemy");
 
@@ -37,13 +39,14 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 	ChildSlot
 	[
 		// black background
-		SNew(SOverlay) + SOverlay::Slot()
-		.HAlign(HAlign_Fill)
-		.VAlign(VAlign_Fill)
+		SNew(SOverlay)/* + SOverlay::Slot()
+		.HAlign(HAlign_Right)
+		.VAlign(VAlign_Bottom)
 		[
 			SNew(SImage)
-			.ColorAndOpacity(FColor(0,0,0,0))
-		]
+			.ColorAndOpacity(FColor(0, 0, 0, 0))
+			.Visibility(BackgroundVisibility)
+		]*/
 
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Right)

@@ -5,6 +5,7 @@
 //#include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "TimerManager.h" 
+#include "Projectile.h"
 //#include "SphereWorld.h"
 #include "CustomARPawn.generated.h"
 
@@ -23,6 +24,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AProjectile> ProjectileClass;
 
 public:
 	// Called every frame
@@ -47,6 +51,10 @@ public:
 	virtual ASphereWorld* GetSphereWorld();
 
 	virtual FVector GetViewLocation();
+
+	virtual void OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos);
+	virtual void OnActionTap();
+	bool WorlditTest(const FVector2D screenPos, FHitResult& /*out*/result);
 
 private:
 

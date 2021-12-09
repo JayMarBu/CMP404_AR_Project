@@ -61,6 +61,10 @@ void AOrbitObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Allow controller component to update actor
+	if(hasControllerComponent)
+		return;
+
 	UpdatePosition();
 	FacePlayer();
 }

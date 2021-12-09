@@ -25,10 +25,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USceneComponent* m_scnComponent;
 
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent* m_staticMeshComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sphere World Information")
 	float m_spawnRadius = 250;
 

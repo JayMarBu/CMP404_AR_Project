@@ -30,7 +30,7 @@ void AGameplayHUD::ShowMenu()
 
 		if (PlayerOwner)
 		{
-			PlayerOwner->SetInputMode(FInputModeUIOnly());
+			//PlayerOwner->SetInputMode(FInputModeUIOnly());
 		}
 	}
 }
@@ -43,7 +43,7 @@ void AGameplayHUD::RemoveMenu()
 
 		if (PlayerOwner)
 		{
-			PlayerOwner->SetInputMode(FInputModeGameAndUI());
+			//PlayerOwner->SetInputMode(FInputModeGameAndUI());
 		}
 	}
 }

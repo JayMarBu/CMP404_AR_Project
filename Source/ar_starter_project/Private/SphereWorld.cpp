@@ -13,21 +13,12 @@ ASphereWorld::ASphereWorld()
 
 	m_scnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("sphere world scene component"));
 	RootComponent = m_scnComponent;
-
-	m_staticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	
-	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
-	m_staticMeshComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void ASphereWorld::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	m_staticMeshComponent->SetRelativeScale3D(FVector(0.3,0.3,0.3));
 }
 
 // Called every frame
