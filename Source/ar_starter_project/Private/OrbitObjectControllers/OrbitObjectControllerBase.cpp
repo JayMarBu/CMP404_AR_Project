@@ -38,3 +38,23 @@ void UOrbitObjectControllerBase::Init(AOrbitObject* obj)
 	m_orbitObject->hasControllerComponent = true;
 }
 
+AOrbitObject* UOrbitObjectControllerBase::SpawnBaseController(AActor* actor, ASphereWorld* sWorld)
+{
+	if (actor == nullptr || sWorld == nullptr)
+		return nullptr;
+
+	float t = FMath::RandRange(0.0f, 360.0f);
+	float s = FMath::RandRange(45.0f, 135.0f);
+
+	FActorSpawnParameters SpawnInfo;
+	FRotator myRot(0, 0, 0);
+	FVector myLoc = sWorld->GeneratePositionOnSphere(t, s, sWorld->m_spawnRadius);
+	AOrbitObject* customActor = actor->GetWorld()->SpawnActor<AOrbitObject>(sWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
+
+	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius));
+
+	customActor->AddControllerComponent<UOrbitObjectControllerBase>();
+
+	return customActor;
+}
+

@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "SphereWorld.h"
 #include "OrbitObjectControllerBase.generated.h"
+
 
 class AOrbitObject;
 
@@ -15,10 +17,14 @@ class AR_STARTER_PROJECT_API UOrbitObjectControllerBase : public UActorComponent
 
 	// Members ************************************************************************************
 public:
+	
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	AOrbitObject* m_orbitObject;
+
+	float m_currentHP;
+	float m_maxHP;
 
 	// Methods ************************************************************************************
 public:	
@@ -37,4 +43,7 @@ public:
 	virtual void OnHitCallback();
 
 	virtual void Init(AOrbitObject* obj);
+
+	static AOrbitObject* SpawnBaseController(AActor* actor, ASphereWorld* sWorld);
+
 };

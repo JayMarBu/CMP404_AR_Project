@@ -19,6 +19,14 @@ ASphereWorld::ASphereWorld()
 void ASphereWorld::BeginPlay()
 {
 	Super::BeginPlay();
+#ifdef PLATFORM_WINDOWS
+
+	FVector Loc = GetActorTransform().GetTranslation();
+
+	DrawDebugSphere(GetWorld(), Loc, m_spawnRadius, 26, FColor(181, 0, 0), true, 999, 0, 1);
+
+#endif // PLATFORM_WINDOWS
+
 }
 
 // Called every frame

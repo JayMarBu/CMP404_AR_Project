@@ -102,3 +102,8 @@ void AOrbitObject::BroadcastHit()
 	m_onProjectileHitDelegate.Broadcast();
 }
 
+FVector AOrbitObject::GetPlayerLocation()
+{
+	return m_sphereWorld->m_player->GetActorLocation();
+}
+

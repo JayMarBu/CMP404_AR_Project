@@ -7,6 +7,7 @@
 #include "SphereWorld.h"
 #include "Misc/App.h"
 #include "OrbitObjectControllers/OrbitObjectControllerBase.h"
+#include "OrbitObjectControllers/BasicEnemyController.h"
 #include "OrbitObject.generated.h"
 
 
@@ -16,6 +17,13 @@ USTRUCT(BlueprintType)
 struct FOrbitTransform
 {
 	GENERATED_BODY()
+
+	enum Axis
+	{
+		X,
+		Y,
+		Z
+	};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FVector2D orbitPosition;
@@ -60,6 +68,24 @@ struct FOrbitTransform
 			orbitPosition.X = 360 + orbitPosition.X;
 		while (orbitPosition.Y < 0)
 			orbitPosition.Y = 360 + orbitPosition.Y;
+	}
+
+	void OscillateAxis(const Axis& a, const float& baseline, const float& func)
+	{
+		switch (a)
+		{
+		case X:
+			orbitPosition.X = baseline + func;
+		break;
+		
+		case Y:
+			orbitPosition.Y = baseline + func;
+		break;
+		
+		case Z:
+			orbitRadius = baseline + func;
+		break;
+		}
 	}
 };
 
@@ -130,6 +156,9 @@ public:
 	template <class ComponentClass>
 	void AddControllerComponent();
 
+	FVector GetPlayerLocation();
+
+	inline ASphereWorld* GetSphereWorld() const { return m_sphereWorld;}
 };
 
 template <class ComponentClass>
@@ -141,7 +170,3 @@ void AOrbitObject::AddControllerComponent()
 	m_controllerComponent->Init(this);
 	m_controllerComponent->RegisterComponent();
 }
-
-
-
-
