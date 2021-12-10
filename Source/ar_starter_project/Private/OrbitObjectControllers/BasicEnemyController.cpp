@@ -44,7 +44,7 @@ void UBasicEnemyController::TickMoveState(float DeltaTime)
 
 	if(m_state!= State::Attack && m_timeCounter > m_minShootTime)
 	{
-		float chance = FMath::RandRange(0, 100);
+		float chance = FMath::RandRange(0, 10000);
 		if(chance <= m_shootChance || m_timeCounter >= m_maxShootTime)
 		{
 			m_state = State::Attack;

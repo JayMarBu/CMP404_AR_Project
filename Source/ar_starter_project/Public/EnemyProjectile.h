@@ -14,8 +14,6 @@ class AR_STARTER_PROJECT_API AEnemyProjectile : public AProjectile
 {
 	GENERATED_BODY()
 
-public:
-	AEnemyProjectile();
-
-	
+protected:
+	void InitialiseCollisionShape() override;
 };

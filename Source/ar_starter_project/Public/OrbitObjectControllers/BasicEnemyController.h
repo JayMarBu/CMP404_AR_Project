@@ -19,10 +19,10 @@ class AR_STARTER_PROJECT_API UBasicEnemyController : public UOrbitObjectControll
 private:
 	float m_timeCounter = 0;
 
-	float m_minShootTime = 2;
-	float m_maxShootTime = 5;
+	float m_minShootTime = 4;
+	float m_maxShootTime = 10;
 
-	float m_shootChance = 5;
+	float m_shootChance = 1;
 
 	float m_oscillationCounter = 0;
 	float m_pingPongCounter = 0;

@@ -11,6 +11,7 @@
 
 class UCameraComponent;
 class ASphereWorld;
+class USphereComponent;
 
 UCLASS()
 class AR_STARTER_PROJECT_API ACustomARPawn : public APawn
@@ -42,6 +43,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCameraComponent* CameraComponent;
 
+
+	UPROPERTY(VisibleDefaultsOnly)
+		USphereComponent* CollisionComponent;
+
 	virtual void SpawnSphereWorld();
 
 	virtual FVector GetViewLocation();
@@ -49,6 +54,8 @@ public:
 	virtual void OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos);
 	virtual void OnActionTap();
 	bool WorlditTest(const FVector2D screenPos, FHitResult& /*out*/result);
+
+	void Hit();
 
 private:
 

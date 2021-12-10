@@ -46,6 +46,8 @@ protected:
 
 	FVector velocity;
 
+	virtual void InitialiseCollisionShape();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

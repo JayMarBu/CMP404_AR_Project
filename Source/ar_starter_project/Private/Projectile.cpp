@@ -26,7 +26,7 @@ AProjectile::AProjectile()
 	{
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
-		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+		InitialiseCollisionShape();
 		CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
 		float radius = 15.0f;
@@ -70,7 +70,11 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+void AProjectile::InitialiseCollisionShape()
+{
+	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 }
 
 // Called every frame
@@ -84,6 +88,16 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::FireInDirection(FVector ShootDirection, ASphereWorld* in_sphereWorld, ProjectileShooter in_projectileType, const float& speed)
 {
+	switch (in_projectileType)
+	{
+	case ProjectileShooter::ENEMY:
+		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("EnemyProjectile"));
+		break;
+	case ProjectileShooter::PLAYER:
+		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+		break;
+	}
+
 	ShootDirection.Normalize();
 	velocity = ShootDirection * speed;
 	ProjectileMovementComponent->Velocity = velocity;
@@ -103,12 +117,17 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 			
 			actor->BroadcastHit();
 
+			Destroy();
+		}
+		else if(UKismetMathLibrary::ClassIsChildOf(HitActorClass, ACustomARPawn::StaticClass()) && projectileType == ProjectileShooter::ENEMY)
+		{
+			ACustomARPawn* actor = static_cast<ACustomARPawn*>(OtherActor);
+
+			actor->Hit();
 
 			Destroy();
 		}
-		// else if hit player
-
-		if(UKismetMathLibrary::ClassIsChildOf(HitActorClass, AProjectile::StaticClass()))
+		else if(UKismetMathLibrary::ClassIsChildOf(HitActorClass, AProjectile::StaticClass()))
 		{
 			AProjectile* actor = static_cast<AProjectile*>(OtherActor);
 

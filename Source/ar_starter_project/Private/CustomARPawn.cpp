@@ -10,6 +10,7 @@
 #include "SphereWorldGameState.h"
 #include "SphereWorld.h"
 #include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+#include "Components/SphereComponent.h"
 //#include "Kismet/KismetMathLibrary.h"
 
 
@@ -31,6 +32,22 @@ ACustomARPawn::ACustomARPawn()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	CameraComponent->SetupAttachment(RootComponent);
 
+
+	if (!CollisionComponent)
+	{
+		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+
+		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Player"));
+#ifdef PLATFORM_WINDOWS
+		CollisionComponent->bHiddenInGame = false;
+#endif // PLATFORM_WINDOWS
+
+
+		float radius = 15.0f;
+		CollisionComponent->InitSphereRadius(radius);
+
+		CollisionComponent->SetupAttachment(ScnComponent);
+	}
 
 	ProjectileClass = AProjectile::StaticClass();
 
@@ -136,4 +153,9 @@ bool ACustomARPawn::WorlditTest(const FVector2D screenPos, FHitResult& /*out*/re
 	bool traceSuccess = GetWorld()->LineTraceSingleByChannel(result, worldPosition, traceVector, ECollisionChannel::ECC_WorldDynamic);
 	// return if the operation was successful
 	return traceSuccess;
+}
+
+void ACustomARPawn::Hit()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Ive been hit!!")));
 }
