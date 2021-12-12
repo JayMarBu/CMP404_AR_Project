@@ -52,7 +52,7 @@ void AMainMenuHud::SpawnControllerEnemy()
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnControllerEnemy();
 }
 
-void AMainMenuHud::ShowMenu()
+void AMainMenuHud::ShowDebugMenu()
 {
 	if (GEngine && GEngine->GameViewport)
 	{
@@ -66,7 +66,7 @@ void AMainMenuHud::ShowMenu()
 	}
 }
 
-void AMainMenuHud::RemoveMenu()
+void AMainMenuHud::RemoveDebugMenu()
 {
 	if (GEngine && GEngine->GameViewport && GameplayWidgetContainer.IsValid())
 	{

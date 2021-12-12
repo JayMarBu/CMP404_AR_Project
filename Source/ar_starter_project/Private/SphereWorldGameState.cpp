@@ -61,9 +61,11 @@ void ASphereWorldGameState::BeginGame()
 	hud->HideMainMenu();
 	hud->ShowDebugMenu();
 
+	m_pawn->InitGame();
 	m_pawn->SpawnSphereWorld();
 
 	m_gameState = ARGameStates::Gameplay;
+	m_score = 0;
 }
 
 void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)

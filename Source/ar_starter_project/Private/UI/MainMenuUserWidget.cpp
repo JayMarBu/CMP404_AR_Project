@@ -18,7 +18,7 @@ void UMainMenuUserWidget::PlayButtonPress()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Play Pressed")));
 	UWorld* w = GetWorld();
-	
+
 	ASphereWorldGameState* gs = w->GetGameState<ASphereWorldGameState>();
 	APlayerController* pc = w->GetFirstPlayerController();
 

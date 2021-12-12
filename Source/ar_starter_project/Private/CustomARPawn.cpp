@@ -76,7 +76,7 @@ void ACustomARPawn::Tick(float DeltaTime)
 
 	FRotator camRot;
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(m_viewLocation, camRot);
-
+	CollisionComponent->SetWorldLocation(m_viewLocation);
 }
 
 // Called to bind functionality to input

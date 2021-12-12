@@ -10,12 +10,16 @@
 
 UBasicEnemyController::UBasicEnemyController() 
 {
-	
+	m_maxHP = 1;
+	m_currentHP = m_maxHP;
 }
 
 void UBasicEnemyController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	m_timeCounter += DeltaTime;
+
+	if(m_currentHP <= 0)
+		m_state = State::Dead;
 
 	switch (m_state)
 	{
@@ -66,7 +70,9 @@ void UBasicEnemyController::TickShootState(float DeltaTime)
 
 void UBasicEnemyController::TickDeadState(float DeltaTime)
 {
+	// TODO death animation/vfx stuff
 
+	m_orbitObject->Destroy();
 }
 
 void UBasicEnemyController::Shoot()
@@ -94,6 +100,7 @@ void UBasicEnemyController::Shoot()
 
 void UBasicEnemyController::OnHitCallback()
 {
+	m_currentHP--;
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("You Hit Something")));
 }
 

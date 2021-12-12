@@ -64,7 +64,7 @@ void AOrbitObject::FacePlayer()
 		return;
 
 	// face the player object
-	FRotator lookatRot = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), m_sphereWorld->m_player->GetActorLocation());
+	FRotator lookatRot = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), m_sphereWorld->m_player->GetViewLocation());
 
 	this->SetActorRotation(lookatRot);
 }

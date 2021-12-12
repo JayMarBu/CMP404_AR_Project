@@ -54,4 +54,7 @@ protected:
 	ARGameStates m_gameState;
 
 	ACustomARPawn* m_pawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int m_score;
 };

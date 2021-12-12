@@ -23,7 +23,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	AOrbitObject* m_orbitObject;
 
+	UPROPERTY(EditAnywhere)
 	float m_currentHP;
+
+	UPROPERTY(EditAnywhere)
 	float m_maxHP;
 
 	// Methods ************************************************************************************
