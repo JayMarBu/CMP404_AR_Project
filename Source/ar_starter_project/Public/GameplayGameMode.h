@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "UI/MainMenuHud.h"
 #include "GameplayGameMode.generated.h"
 
 /**
@@ -16,4 +17,6 @@ class AR_STARTER_PROJECT_API AGameplayGameMode : public AGameModeBase
 
 public:
 	AGameplayGameMode();
+
+	void BeginGame();
 };

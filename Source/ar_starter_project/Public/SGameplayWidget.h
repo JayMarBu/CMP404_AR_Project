@@ -14,12 +14,12 @@ class SGameplayWidget : public SCompoundWidget
 	// Members ************************************************************************************
 public:
 
-	TWeakObjectPtr<class AGameplayHUD> OwningHUD;
+	TWeakObjectPtr<class AMainMenuHud> OwningHUD;
 
 	// Methods ************************************************************************************ 
 public:
 	SLATE_BEGIN_ARGS(SGameplayWidget) {}
-	SLATE_ARGUMENT(TWeakObjectPtr<class AGameplayHUD>, OwningHUD)
+	SLATE_ARGUMENT(TWeakObjectPtr<class AMainMenuHud>, OwningHUD)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& inArgs);

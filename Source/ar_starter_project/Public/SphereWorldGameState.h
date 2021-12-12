@@ -8,6 +8,16 @@
 #include "SphereWorldGameState.generated.h"
 
 class ASphereWorld;
+class ACustomARPawn;
+
+enum class ARGameStates
+{
+	Main_Menu,
+	Gameplay,
+	Options_Menu,
+	Help_Menu,
+	Death_menu
+};
 
 /**
  * 
@@ -27,9 +37,21 @@ public:
 	void SpawnEnemy();
 	void SpawnControllerEnemy();
 
+	inline ARGameStates GetGameState() const { return m_gameState;}
+	inline void SetGameState(const ARGameStates& state) {m_gameState = state;}
+
+	void BeginGame();
+
+	void SetPawn(ACustomARPawn* pawn);
+	ACustomARPawn* GetPawn();
+
 protected:
 
 	ASphereWorld* m_sphereWorld;
 
 	TArray<AOrbitObject*> m_enemies;
+
+	ARGameStates m_gameState;
+
+	ACustomARPawn* m_pawn;
 };

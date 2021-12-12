@@ -7,10 +7,12 @@
 #include "ARBlueprintLibrary.h"
 #include "OrbitObjectControllers/OrbitObjectControllerBase.h"
 #include "OrbitObjectControllers/BasicEnemyController.h"
+#include "GameplayGameMode.h"
+#include "CustomARPawn.h"
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
-
+	m_gameState = ARGameStates::Main_Menu;
 }
 
 ASphereWorld* ASphereWorldGameState::CreateSphereWorld(FVector worldPosition, FTransform trans)
@@ -48,4 +50,28 @@ void ASphereWorldGameState::SpawnControllerEnemy()
 		return;
 
 	m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this,m_sphereWorld));
+}
+
+void ASphereWorldGameState::BeginGame()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
+
+	AMainMenuHud* hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	hud->HideMainMenu();
+	hud->ShowDebugMenu();
+
+	m_pawn->SpawnSphereWorld();
+
+	m_gameState = ARGameStates::Gameplay;
+}
+
+void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)
+{
+	m_pawn = pawn;
+}
+
+ACustomARPawn* ASphereWorldGameState::GetPawn()
+{
+	return m_pawn;
 }

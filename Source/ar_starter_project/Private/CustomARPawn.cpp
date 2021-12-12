@@ -63,25 +63,16 @@ void ACustomARPawn::BeginPlay()
 	Super::BeginPlay();
 	UKismetSystemLibrary::PrintString(this, FString(TEXT("Hello world")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
 
-	UARSessionConfig* Config = NewObject<UARSessionConfig>();
-	//Config->
-	UARBlueprintLibrary::StartARSession(Config);
-
-#if PLATFORM_ANDROID
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Android")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
-#endif
-#if PLATFORM_WINDOWS
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Windows")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
-
-#endif
-
-	SpawnSphereWorld();
+	GetWorld()->GetGameState<ASphereWorldGameState>()->SetPawn(this);
 }
 
 // Called every frame
 void ACustomARPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(GetWorld()->GetGameState<ASphereWorldGameState>()->GetGameState() != ARGameStates::Gameplay)
+		return;
 
 	FRotator camRot;
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(m_viewLocation, camRot);
@@ -158,4 +149,21 @@ bool ACustomARPawn::WorlditTest(const FVector2D screenPos, FHitResult& /*out*/re
 void ACustomARPawn::Hit()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Ive been hit!!")));
+}
+
+void ACustomARPawn::InitGame()
+{
+	UARSessionConfig* Config = NewObject<UARSessionConfig>();
+	//Config->
+	UARBlueprintLibrary::StartARSession(Config);
+
+#if PLATFORM_ANDROID
+	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Android")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
+#endif
+#if PLATFORM_WINDOWS
+	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Windows")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
+
+#endif
+
+	SpawnSphereWorld();
 }

@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameplayHUD.h"
+#include "UI/MainMenuHud.h"
+#include "UI/MainMenuUserWidget.h"
 #include "SGameplayWidget.h"
 #include "Widgets/SWeakWidget.h"
 #include "Engine/Engine.h"
@@ -9,26 +10,51 @@
 #include "GameFramework/PlayerController.h"
 #include "SphereWorldGameState.h"
 
-void AGameplayHUD::BeginPlay()
+void AMainMenuHud::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ShowMenu();
+	ShowMainMenu();
 }
 
-void AGameplayHUD::SpawnEnemy()
+AMainMenuHud::AMainMenuHud()
+{
+	float test = 0;
+}
+
+void AMainMenuHud::ShowMainMenu()
+{
+	if (m_widgetClass)
+	{
+		m_mainMenuWidget = CreateWidget<UMainMenuUserWidget>(GetWorld(), m_widgetClass);
+		if (m_mainMenuWidget)
+		{
+			m_mainMenuWidget->AddToViewport();
+		}
+	}
+}
+
+void AMainMenuHud::HideMainMenu()
+{
+	if (m_mainMenuWidget)
+	{
+		m_mainMenuWidget->RemoveFromParent();
+	}
+}
+
+void AMainMenuHud::SpawnEnemy()
 {
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnEnemy();
 }
 
-void AGameplayHUD::SpawnControllerEnemy()
+void AMainMenuHud::SpawnControllerEnemy()
 {
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnControllerEnemy();
 }
 
-void AGameplayHUD::ShowMenu()
+void AMainMenuHud::ShowMenu()
 {
-	/*if (GEngine && GEngine->GameViewport)
+	if (GEngine && GEngine->GameViewport)
 	{
 		GameplayWidget = SNew(SGameplayWidget).OwningHUD(this);
 		GEngine->GameViewport->AddViewportWidgetContent(SAssignNew(GameplayWidgetContainer, SWeakWidget).PossiblyNullContent(GameplayWidget.ToSharedRef()));
@@ -37,12 +63,12 @@ void AGameplayHUD::ShowMenu()
 		{
 			//PlayerOwner->SetInputMode(FInputModeUIOnly());
 		}
-	}*/
+	}
 }
 
-void AGameplayHUD::RemoveMenu()
+void AMainMenuHud::RemoveMenu()
 {
-	/*if (GEngine && GEngine->GameViewport && GameplayWidgetContainer.IsValid())
+	if (GEngine && GEngine->GameViewport && GameplayWidgetContainer.IsValid())
 	{
 		GEngine->GameViewport->RemoveViewportWidgetContent(GameplayWidgetContainer.ToSharedRef());
 
@@ -50,5 +76,10 @@ void AGameplayHUD::RemoveMenu()
 		{
 			//PlayerOwner->SetInputMode(FInputModeGameAndUI());
 		}
-	}*/
+	}
+}
+
+void AMainMenuHud::DrawHUD()
+{
+	Super::DrawHUD();
 }

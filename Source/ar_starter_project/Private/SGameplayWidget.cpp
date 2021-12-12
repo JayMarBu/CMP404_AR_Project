@@ -2,7 +2,7 @@
 
 
 #include "SGameplayWidget.h"
-#include "GameplayHUD.h"
+#include "UI/MainMenuHUD.h"
 //#include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 
 #define BASIC_BUTTON(label, fontStyle, justification, callback)\
@@ -39,16 +39,7 @@ void SGameplayWidget::Construct(const FArguments& inArgs)
 
 	ChildSlot
 	[
-		// black background
-		SNew(SOverlay)/* + SOverlay::Slot()
-		.HAlign(HAlign_Right)
-		.VAlign(VAlign_Bottom)
-		[
-			SNew(SImage)
-			.ColorAndOpacity(FColor(0, 0, 0, 0))
-			.Visibility(BackgroundVisibility)
-		]*/
-
+		SNew(SOverlay)
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Right)
 		.VAlign(VAlign_Bottom)

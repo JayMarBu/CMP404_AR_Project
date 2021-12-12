@@ -57,6 +57,8 @@ public:
 
 	void Hit();
 
+	void InitGame();
+
 private:
 
 	FTimerHandle cameraTicker;
