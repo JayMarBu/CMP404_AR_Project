@@ -138,6 +138,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 			if(projectileType != actor->projectileType)
 			{
 				OtherActor->Destroy();
+
+				ASphereWorldGameState::Get(this)->AddScore(5);
+
 				Destroy();
 			}
 		}
