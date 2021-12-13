@@ -6,10 +6,13 @@
 #include "Components/TextBlock.h"
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
+#include "SphereWorldGameState.h"
 
 void UGameUIWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 
+	MenuButton->OnClicked.AddUniqueDynamic(this, &UGameUIWidget::MenuButtonPressed);
 }
 
 void UGameUIWidget::SpawnHearts(const unsigned int& num)
@@ -55,4 +58,9 @@ void UGameUIWidget::SetScore(const unsigned int& num)
 	FString text = "Score: " + FString::FromInt(num);
 
 	ScoreText->SetText(FText::FromString(text));
+}
+
+void UGameUIWidget::MenuButtonPressed()
+{
+	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Main_Menu);
 }

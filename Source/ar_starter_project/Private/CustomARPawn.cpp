@@ -135,9 +135,6 @@ void ACustomARPawn::Hit()
 
 void ACustomARPawn::InitGame()
 {
-	UARSessionConfig* Config = NewObject<UARSessionConfig>();
-	UARBlueprintLibrary::StartARSession(Config);
-
 	m_currentHP = m_maxHP;
 
 	SpawnSphereWorld();
@@ -150,7 +147,4 @@ void ACustomARPawn::OnDeath()
 	gs->GetHUD()->SetCurrentHealth(0);
 
 	gs->SetGameState(ARGameStates::Death_menu);
-	
-	UARBlueprintLibrary::StopARSession();
-
 }

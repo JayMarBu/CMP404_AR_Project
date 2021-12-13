@@ -10,6 +10,8 @@
 #include "GameplayGameMode.h"
 #include "CustomARPawn.h"
 #include "UI/MainMenuHud.h"
+#include <Blueprint/UserWidget.h>
+#include <Kismet/GameplayStatics.h>
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
@@ -70,6 +72,7 @@ void ASphereWorldGameState::SetGameState(const ARGameStates& state)
 		break;
 
 	case ARGameStates::Main_Menu:
+		MainMenu();
 		break;
 	}
 }
@@ -87,6 +90,20 @@ void ASphereWorldGameState::BeginGame()
 
 	m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
+
+	UARSessionConfig* Config = NewObject<UARSessionConfig>();
+	UARBlueprintLibrary::StartARSession(Config);
+
+	/*GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, UGameplayStatics::GetPlatformName());
+
+	FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
+	if (UGameplayStatics::GetPlatformName() == "PLATFORM_ANDROID" && status.Status != EARSessionStatus::Running)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Error starting AR session")));
+		FString errorMessage = status.AdditionalInfo;
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, errorMessage);
+		MainMenu();
+	}*/
 
 	m_pawn->InitGame();
 
@@ -107,6 +124,18 @@ void ASphereWorldGameState::OnPlayerDeath()
 	m_hud->SetScore(m_score);
 
 	CleanupGame();
+}
+
+void ASphereWorldGameState::MainMenu()
+{
+	CleanupGame();
+
+	m_hud->HideGameHUD();
+	m_hud->HideDebugMenu();
+	m_hud->HideDeathScreen();
+
+	m_hud->ShowMainMenu();
+
 }
 
 void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)
@@ -154,6 +183,12 @@ void ASphereWorldGameState::CleanupGame()
 {
 	CleanupSphereWorld();
 	CleanupEnemies();
+
+	FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
+
+	if(status.Status == EARSessionStatus::Running)
+		UARBlueprintLibrary::StopARSession();
+
 }
 
 void ASphereWorldGameState::AddScore(const unsigned int& in_pts)
@@ -173,4 +208,9 @@ void ASphereWorldGameState::SetScore(const unsigned int& in_pts)
 ASphereWorldGameState* ASphereWorldGameState::Get(AActor* actor)
 {
 	return actor->GetWorld()->GetGameState<ASphereWorldGameState>();
+}
+
+ASphereWorldGameState* ASphereWorldGameState::Get(UUserWidget* widget)
+{
+	return widget->GetWorld()->GetGameState<ASphereWorldGameState>();
 }

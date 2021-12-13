@@ -57,12 +57,15 @@ public:
 	inline virtual unsigned int GetScore() const { return m_score; }
 
 	static ASphereWorldGameState* Get(AActor* actor);
+	static ASphereWorldGameState* Get(class UUserWidget* actor);
 
 protected:
 
 	void BeginGame();
 
 	void OnPlayerDeath();
+
+	void MainMenu();
 
 	ASphereWorld* m_sphereWorld;
 

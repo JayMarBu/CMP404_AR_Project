@@ -27,7 +27,7 @@ void UDeathScreenWidget::PlayButtonPress()
 
 void UDeathScreenWidget::ReturnButtonPress()
 {
-	// go to home screen
+	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Main_Menu);
 }
 
 void UDeathScreenWidget::SetScore(const unsigned int& num)

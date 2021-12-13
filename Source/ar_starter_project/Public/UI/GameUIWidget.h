@@ -51,5 +51,8 @@ public:
 
 	virtual void SetScore(const unsigned int& num);
 
+	UFUNCTION()
+	void MenuButtonPressed();
+
 	//UGameUIWidget(const FObjectInitializer& ObjectInitializer);
 };
