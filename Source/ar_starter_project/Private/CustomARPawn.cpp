@@ -5,7 +5,6 @@
 #include "Camera/CameraComponent.h"		// Needs this to access Camera Component Functionality
 #include"ARBlueprintLibrary.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "CustomActor.h"
 #include "DrawDebugHelpers.h"
 #include "SphereWorldGameState.h"
 #include "SphereWorld.h"
@@ -38,10 +37,6 @@ ACustomARPawn::ACustomARPawn()
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Player"));
-#ifdef PLATFORM_WINDOWS
-		CollisionComponent->bHiddenInGame = false;
-#endif // PLATFORM_WINDOWS
-
 
 		float radius = 15.0f;
 		CollisionComponent->InitSphereRadius(radius);
@@ -121,29 +116,6 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 			Projectile->FireInDirection(LaunchDirection, m_sphereWorld, ProjectileShooter::PLAYER);
 		}
 	}
-}
-
-void ACustomARPawn::OnActionTap()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, FString::Printf(TEXT("screen tapped")));
-}
-
-bool ACustomARPawn::WorlditTest(const FVector2D screenPos, FHitResult& /*out*/result)
-{
-	// Get player controller
-	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
-	// Perform deprojection taking 2d clicked area and generating reference in 3d world-space.
-	FVector worldPosition;
-	FVector worldDirection;
-	bool deprojectionSuccess = UGameplayStatics::DeprojectScreenToWorld(playerController, screenPos, /*out*/worldPosition, /*out*/worldDirection);
-
-	// construct trace vector (from point clicked to 1000.0 units beyond in same direction)
-	FVector traceVector = worldDirection * 1000.0;
-	traceVector = worldPosition + traceVector;
-	// perform line trace
-	bool traceSuccess = GetWorld()->LineTraceSingleByChannel(result, worldPosition, traceVector, ECollisionChannel::ECC_WorldDynamic);
-	// return if the operation was successful
-	return traceSuccess;
 }
 
 void ACustomARPawn::Hit()

@@ -52,8 +52,6 @@ public:
 	virtual FVector GetViewLocation();
 
 	virtual void OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos);
-	virtual void OnActionTap();
-	bool WorlditTest(const FVector2D screenPos, FHitResult& /*out*/result);
 
 	void Hit();
 
