@@ -46,6 +46,8 @@ public:
 	void SetPawn(ACustomARPawn* pawn);
 	ACustomARPawn* GetPawn();
 
+	AMainMenuHud* GetHUD();
+
 protected:
 
 	ASphereWorld* m_sphereWorld;

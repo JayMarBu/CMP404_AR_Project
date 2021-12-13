@@ -42,10 +42,10 @@ protected:
 	FVector m_viewLocation;
 
 	UPROPERTY(EditDefaultsOnly)
-	float m_maxHP = 10;
+	unsigned int m_maxHP = 10;
 
 	UPROPERTY(EditAnywhere)
-	float m_currentHP;
+	unsigned int m_currentHP;
 
 	// Methods ************************************************************************************
 public:
@@ -68,5 +68,8 @@ public:
 	void Hit();
 
 	void InitGame();
+
+	virtual inline unsigned int GetMaxHealth() const { return m_maxHP;} 
+	virtual inline unsigned int GetCurrentHealth() const { return m_currentHP;} 
 
 };

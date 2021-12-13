@@ -33,6 +33,19 @@ void UGameUIWidget::SpawnHearts(const unsigned int& num)
 		}
 		
 	}
+}
 
-	m_hearts[3]->SetColorAndOpacity(FLinearColor(1,0,0,1));
+void UGameUIWidget::SetHealth(const unsigned int& num)
+{
+	for (unsigned int i = 0; i < (unsigned int)m_hearts.Num(); i++)
+	{
+		if( i < num)
+		{
+			m_hearts[i]->SetColorAndOpacity(FLinearColor(0,1,0,1));
+		}
+		else
+		{
+			m_hearts[i]->SetColorAndOpacity(FLinearColor(0.25,0.25,0.25,1));
+		}
+	}
 }

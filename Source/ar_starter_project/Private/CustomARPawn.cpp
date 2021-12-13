@@ -10,6 +10,7 @@
 #include "SphereWorld.h"
 #include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "Components/SphereComponent.h"
+#include "UI/MainMenuHud.h"
 //#include "Kismet/KismetMathLibrary.h"
 
 
@@ -38,7 +39,7 @@ ACustomARPawn::ACustomARPawn()
 
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Player"));
 
-		float radius = 15.0f;
+		float radius = 35.0f;
 		CollisionComponent->InitSphereRadius(radius);
 
 		CollisionComponent->SetupAttachment(ScnComponent);
@@ -121,6 +122,9 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 void ACustomARPawn::Hit()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Ive been hit!!")));
+	m_currentHP--;
+
+	GetWorld()->GetGameState<ASphereWorldGameState>()->GetHUD()->SetCurrentHealth(m_currentHP);
 }
 
 void ACustomARPawn::InitGame()

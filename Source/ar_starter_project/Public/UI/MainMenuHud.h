@@ -56,6 +56,7 @@ public:
 	virtual void RemoveDebugMenu();
 
 	virtual void SpawnHearts(const unsigned int& num);
+	virtual void SetCurrentHealth(const unsigned int& num);
 
 
 	virtual void DrawHUD() override;

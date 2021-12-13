@@ -105,6 +105,11 @@ void AMainMenuHud::SpawnHearts(const unsigned int& num)
 	m_gameHUDWidget->SpawnHearts(num);
 }
 
+void AMainMenuHud::SetCurrentHealth(const unsigned int& num)
+{
+	m_gameHUDWidget->SetHealth(num);
+}
+
 void AMainMenuHud::DrawHUD()
 {
 	Super::DrawHUD();

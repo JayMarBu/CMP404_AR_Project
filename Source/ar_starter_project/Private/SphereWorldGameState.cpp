@@ -9,6 +9,7 @@
 #include "OrbitObjectControllers/BasicEnemyController.h"
 #include "GameplayGameMode.h"
 #include "CustomARPawn.h"
+#include "UI/MainMenuHud.h"
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
@@ -63,9 +64,10 @@ void ASphereWorldGameState::BeginGame()
 	m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
 
-	m_hud->SpawnHearts(10);
-
 	m_pawn->InitGame();
+
+	m_hud->SpawnHearts(m_pawn->GetMaxHealth());
+	m_hud->SetCurrentHealth(m_pawn->GetMaxHealth());
 
 	m_gameState = ARGameStates::Gameplay;
 	m_score = 0;
@@ -79,4 +81,9 @@ void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)
 ACustomARPawn* ASphereWorldGameState::GetPawn()
 {
 	return m_pawn;
+}
+
+AMainMenuHud* ASphereWorldGameState::GetHUD()
+{
+	return m_hud;
 }

@@ -46,5 +46,8 @@ public:
 	UFUNCTION()
 	void SpawnHearts(const unsigned int& num);
 
+	UFUNCTION()
+	void SetHealth(const unsigned int& num);
+
 	//UGameUIWidget(const FObjectInitializer& ObjectInitializer);
 };
