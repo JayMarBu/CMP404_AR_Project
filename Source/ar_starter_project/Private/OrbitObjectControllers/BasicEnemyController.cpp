@@ -11,8 +11,6 @@
 
 UBasicEnemyController::UBasicEnemyController() 
 {
-	m_maxHP = 1;
-	m_currentHP = m_maxHP;
 }
 
 void UBasicEnemyController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -105,7 +103,7 @@ void UBasicEnemyController::Shoot()
 void UBasicEnemyController::OnHitCallback()
 {
 	m_currentHP--;
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("You Hit Something")));
+	ASphereWorldGameState::Get(m_orbitObject)->AddScore(m_orbitObject->m_scoreWorth);
 }
 
 void UBasicEnemyController::Init(AOrbitObject* obj)
@@ -123,6 +121,11 @@ void UBasicEnemyController::Init(AOrbitObject* obj)
 	m_baseLine = m_orbitObject->m_orbitTransform.orbitPosition.Y;
 
 	m_initXval = m_orbitObject->m_orbitTransform.orbitPosition.X;
+
+	m_maxHP = 1;
+	m_currentHP = m_maxHP;
+
+	m_orbitObject->m_scoreWorth = 10;
 }
 
 AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld)

@@ -42,4 +42,6 @@ public:
 
 	UFUNCTION()
 		void ReturnButtonPress();
+
+	void SetScore(const unsigned int& num);
 };

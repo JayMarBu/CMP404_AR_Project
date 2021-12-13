@@ -51,6 +51,13 @@ public:
 	void CleanupEnemies();
 	void CleanupGame();
 
+	virtual void AddScore(const unsigned int& in_pts);
+	virtual void SetScore(const unsigned int& in_pts);
+
+	inline virtual unsigned int GetScore() const { return m_score; }
+
+	static ASphereWorldGameState* Get(AActor* actor);
+
 protected:
 
 	void BeginGame();
@@ -67,6 +74,5 @@ protected:
 
 	AMainMenuHud* m_hud = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int m_score;
+	unsigned int m_score;
 };

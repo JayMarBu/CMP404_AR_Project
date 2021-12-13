@@ -94,7 +94,7 @@ void ASphereWorldGameState::BeginGame()
 	m_hud->SetCurrentHealth(m_pawn->GetMaxHealth());
 
 	m_gameState = ARGameStates::Gameplay;
-	m_score = 0;
+	SetScore(0);
 }
 
 void ASphereWorldGameState::OnPlayerDeath()
@@ -104,6 +104,7 @@ void ASphereWorldGameState::OnPlayerDeath()
 	m_hud->HideDebugMenu();
 
 	m_hud->ShowDeathScreen();
+	m_hud->SetScore(m_score);
 
 	CleanupGame();
 }
@@ -153,4 +154,23 @@ void ASphereWorldGameState::CleanupGame()
 {
 	CleanupSphereWorld();
 	CleanupEnemies();
+}
+
+void ASphereWorldGameState::AddScore(const unsigned int& in_pts)
+{
+	m_score += in_pts;
+	if(m_hud)
+		m_hud->SetScore(m_score);
+}
+
+void ASphereWorldGameState::SetScore(const unsigned int& in_pts)
+{
+	m_score = in_pts;
+	if (m_hud)
+		m_hud->SetScore(m_score);
+}
+
+ASphereWorldGameState* ASphereWorldGameState::Get(AActor* actor)
+{
+	return actor->GetWorld()->GetGameState<ASphereWorldGameState>();
 }

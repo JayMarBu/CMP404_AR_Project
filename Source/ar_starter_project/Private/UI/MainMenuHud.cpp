@@ -131,6 +131,27 @@ void AMainMenuHud::SetCurrentHealth(const unsigned int& num)
 	m_gameHUDWidget->SetHealth(num);
 }
 
+void AMainMenuHud::SetScore(const unsigned int& num)
+{
+	ARGameStates gState = ASphereWorldGameState::Get(this)->GetGameState();
+	
+	switch (gState)
+	{
+	case ARGameStates::Main_Menu:
+		break;
+	case ARGameStates::Gameplay:
+		m_gameHUDWidget->SetScore(num);
+		break;
+	case ARGameStates::Options_Menu:
+		break;
+	case ARGameStates::Help_Menu:
+		break;
+	case ARGameStates::Death_menu:
+		m_deathWidget->SetScore(num);
+		break;
+	}
+}
+
 void AMainMenuHud::DrawHUD()
 {
 	Super::DrawHUD();

@@ -49,3 +49,10 @@ void UGameUIWidget::SetHealth(const unsigned int& num)
 		}
 	}
 }
+
+void UGameUIWidget::SetScore(const unsigned int& num)
+{
+	FString text = "Score: " + FString::FromInt(num);
+
+	ScoreText->SetText(FText::FromString(text));
+}

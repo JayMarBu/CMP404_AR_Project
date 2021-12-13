@@ -49,5 +49,7 @@ public:
 	UFUNCTION()
 	void SetHealth(const unsigned int& num);
 
+	virtual void SetScore(const unsigned int& num);
+
 	//UGameUIWidget(const FObjectInitializer& ObjectInitializer);
 };

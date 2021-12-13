@@ -29,3 +29,10 @@ void UDeathScreenWidget::ReturnButtonPress()
 {
 	// go to home screen
 }
+
+void UDeathScreenWidget::SetScore(const unsigned int& num)
+{
+	FString text = "Score: " + FString::FromInt(num);
+
+	ScoreText->SetText(FText::FromString(text));
+}

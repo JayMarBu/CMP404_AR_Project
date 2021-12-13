@@ -18,8 +18,8 @@ class AR_STARTER_PROJECT_API UMainMenuUserWidget : public UUserWidget
 	GENERATED_BODY()
 	// Members ************************************************************************************
 protected:
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* HighscoreText;
+	//UPROPERTY(meta = (BindWidget))
+	//UTextBlock* HighscoreText;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* PlayButton;

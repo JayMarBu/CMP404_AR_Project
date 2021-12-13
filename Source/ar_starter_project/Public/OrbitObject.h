@@ -127,6 +127,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnProjectileHitDelegate m_onProjectileHitDelegate;
 
+	unsigned int m_scoreWorth;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();

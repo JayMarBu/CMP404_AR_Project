@@ -104,6 +104,6 @@ void AOrbitObject::BroadcastHit()
 
 FVector AOrbitObject::GetPlayerLocation()
 {
-	return m_sphereWorld->m_player->GetActorLocation();
+	return m_sphereWorld->m_player->GetViewLocation();
 }
 
