@@ -39,7 +39,7 @@ ACustomARPawn::ACustomARPawn()
 
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Player"));
 
-		float radius = 35.0f;
+		float radius = 15.0f;
 		CollisionComponent->InitSphereRadius(radius);
 
 		CollisionComponent->SetupAttachment(ScnComponent);
@@ -58,6 +58,9 @@ void ACustomARPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	UKismetSystemLibrary::PrintString(this, FString(TEXT("Hello world")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
+
+	UARSessionConfig* Config = NewObject<UARSessionConfig>();
+	UARBlueprintLibrary::StartARSession(Config);
 
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SetPawn(this);
 }

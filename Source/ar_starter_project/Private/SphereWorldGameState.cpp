@@ -91,9 +91,6 @@ void ASphereWorldGameState::BeginGame()
 	m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
 
-	UARSessionConfig* Config = NewObject<UARSessionConfig>();
-	UARBlueprintLibrary::StartARSession(Config);
-
 	/*GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, UGameplayStatics::GetPlatformName());
 
 	FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
@@ -184,10 +181,10 @@ void ASphereWorldGameState::CleanupGame()
 	CleanupSphereWorld();
 	CleanupEnemies();
 
-	FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
+	//FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
 
-	if(status.Status == EARSessionStatus::Running)
-		UARBlueprintLibrary::StopARSession();
+	//if(status.Status == EARSessionStatus::Running)
+	//	UARBlueprintLibrary::StopARSession();
 
 }
 
