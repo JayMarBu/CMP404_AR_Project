@@ -10,6 +10,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SphereWorldGameState.h"
 #include "UI/GameUIWidget.h"
+#include "UI/DeathScreenWidget.h"
 
 void AMainMenuHud::BeginPlay()
 {
@@ -63,6 +64,26 @@ void AMainMenuHud::HideGameHUD()
 	}
 }
 
+void AMainMenuHud::ShowDeathScreen()
+{
+	if (m_deathWidgetClass)
+	{
+		m_deathWidget = CreateWidget<UDeathScreenWidget>(GetWorld(), m_deathWidgetClass);
+		if (m_deathWidget)
+		{
+			m_deathWidget->AddToViewport();
+		}
+	}
+}
+
+void AMainMenuHud::HideDeathScreen()
+{
+	if (m_deathWidget)
+	{
+		m_deathWidget->RemoveFromParent();
+	}
+}
+
 void AMainMenuHud::SpawnEnemy()
 {
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SpawnEnemy();
@@ -87,7 +108,7 @@ void AMainMenuHud::ShowDebugMenu()
 	}
 }
 
-void AMainMenuHud::RemoveDebugMenu()
+void AMainMenuHud::HideDebugMenu()
 {
 	if (GEngine && GEngine->GameViewport && GameplayWidgetContainer.IsValid())
 	{

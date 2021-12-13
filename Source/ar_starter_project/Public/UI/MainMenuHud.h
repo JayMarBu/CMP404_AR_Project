@@ -8,6 +8,7 @@
 
 class UMainMenuUserWidget;
 class UGameUIWidget;
+class UDeathScreenWidget;
 
 /**
  * 
@@ -21,6 +22,7 @@ protected:
 	UPROPERTY();
 	UMainMenuUserWidget* m_mainMenuWidget;
 	UGameUIWidget* m_gameHUDWidget;
+	UDeathScreenWidget* m_deathWidget;
 
 	TSharedPtr<class SGameplayWidget> GameplayWidget;
 	TSharedPtr<class SWidget> GameplayWidgetContainer;
@@ -32,6 +34,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameUIWidget> m_gameUIWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDeathScreenWidget> m_deathWidgetClass;
 
 	// Methods ************************************************************************************
 
@@ -48,12 +53,15 @@ public:
 
 	virtual void ShowGameHUD();
 	virtual void HideGameHUD();
+	
+	virtual void ShowDeathScreen();
+	virtual void HideDeathScreen();
 
 	void SpawnEnemy();
 	void SpawnControllerEnemy();
 
 	virtual void ShowDebugMenu();
-	virtual void RemoveDebugMenu();
+	virtual void HideDebugMenu();
 
 	virtual void SpawnHearts(const unsigned int& num);
 	virtual void SetCurrentHealth(const unsigned int& num);

@@ -69,6 +69,10 @@ public:
 
 	void InitGame();
 
+	void OnDeath();
+
+	void SetSphereWorld(ASphereWorld* sWorld) {m_sphereWorld = sWorld;}
+
 	virtual inline unsigned int GetMaxHealth() const { return m_maxHP;} 
 	virtual inline unsigned int GetCurrentHealth() const { return m_currentHP;} 
 

@@ -10,6 +10,7 @@
 #include"Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include"Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "OrbitObject.h"
+#include "SphereWorldGameState.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -81,6 +82,9 @@ void AProjectile::InitialiseCollisionShape()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(GetWorld()->GetGameState<ASphereWorldGameState>()->GetGameState() != ARGameStates::Gameplay)
+		Destroy();
 
 	ProjectileMovementComponent->Velocity = velocity;
 

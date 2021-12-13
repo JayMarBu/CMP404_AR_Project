@@ -18,6 +18,8 @@ ASphereWorldGameState::ASphereWorldGameState()
 
 ASphereWorld* ASphereWorldGameState::CreateSphereWorld(FVector worldPosition, FTransform trans)
 {
+	CleanupSphereWorld();
+
 	worldPosition = trans.GetTranslation();
 
 	FActorSpawnParameters SpawnInfo;
@@ -53,14 +55,36 @@ void ASphereWorldGameState::SpawnControllerEnemy()
 	m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this,m_sphereWorld));
 }
 
+void ASphereWorldGameState::SetGameState(const ARGameStates& state)
+{
+	m_gameState = state;
+
+	switch (m_gameState)
+	{
+	case ARGameStates::Gameplay:
+		BeginGame();
+		break;
+
+	case ARGameStates::Death_menu:
+		OnPlayerDeath();
+		break;
+
+	case ARGameStates::Main_Menu:
+		break;
+	}
+}
+
 void ASphereWorldGameState::BeginGame()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
+	CleanupGame();
 
 	if(!m_hud)
 		m_hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	m_hud->HideMainMenu();
+	m_hud->HideDeathScreen();
+
 	m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
 
@@ -71,6 +95,17 @@ void ASphereWorldGameState::BeginGame()
 
 	m_gameState = ARGameStates::Gameplay;
 	m_score = 0;
+}
+
+void ASphereWorldGameState::OnPlayerDeath()
+{
+	m_hud->HideMainMenu();
+	m_hud->HideGameHUD();
+	m_hud->HideDebugMenu();
+
+	m_hud->ShowDeathScreen();
+
+	CleanupGame();
 }
 
 void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)
@@ -86,4 +121,36 @@ ACustomARPawn* ASphereWorldGameState::GetPawn()
 AMainMenuHud* ASphereWorldGameState::GetHUD()
 {
 	return m_hud;
+}
+
+void ASphereWorldGameState::CleanupSphereWorld()
+{
+	if (!m_sphereWorld)
+		return;
+
+	m_sphereWorld->Destroy();
+	m_sphereWorld = nullptr;
+	
+	if(m_pawn)
+		m_pawn->SetSphereWorld(nullptr);
+}
+
+void ASphereWorldGameState::CleanupEnemies()
+{
+	if(m_enemies.Num() <= 0)
+		return;
+
+	for (auto e: m_enemies)
+	{
+		e->Destroy();
+		e = nullptr;
+	}
+
+	m_enemies.Empty();
+}
+
+void ASphereWorldGameState::CleanupGame()
+{
+	CleanupSphereWorld();
+	CleanupEnemies();
 }

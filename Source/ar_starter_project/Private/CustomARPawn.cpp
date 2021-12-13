@@ -124,6 +124,12 @@ void ACustomARPawn::Hit()
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Ive been hit!!")));
 	m_currentHP--;
 
+	if(m_currentHP <= 0)
+	{
+		OnDeath();
+		return;
+	}
+
 	GetWorld()->GetGameState<ASphereWorldGameState>()->GetHUD()->SetCurrentHealth(m_currentHP);
 }
 
@@ -135,4 +141,16 @@ void ACustomARPawn::InitGame()
 	m_currentHP = m_maxHP;
 
 	SpawnSphereWorld();
+}
+
+void ACustomARPawn::OnDeath()
+{
+	ASphereWorldGameState* gs = GetWorld()->GetGameState<ASphereWorldGameState>();
+
+	gs->GetHUD()->SetCurrentHealth(0);
+
+	gs->SetGameState(ARGameStates::Death_menu);
+	
+	UARBlueprintLibrary::StopARSession();
+
 }

@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
 #include "EnemyProjectile.h"
+#include "SphereWorldGameState.h"
 
 UBasicEnemyController::UBasicEnemyController() 
 {
@@ -16,6 +17,9 @@ UBasicEnemyController::UBasicEnemyController()
 
 void UBasicEnemyController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if(GetWorld()->GetGameState<ASphereWorldGameState>()->GetGameState() != ARGameStates::Gameplay)
+		return;
+
 	m_timeCounter += DeltaTime;
 
 	if(m_currentHP <= 0)

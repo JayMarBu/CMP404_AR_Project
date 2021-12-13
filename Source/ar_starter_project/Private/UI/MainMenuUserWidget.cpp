@@ -16,7 +16,6 @@ UMainMenuUserWidget::UMainMenuUserWidget(const FObjectInitializer& ObjectInitial
 
 void UMainMenuUserWidget::PlayButtonPress()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Play Pressed")));
 	UWorld* w = GetWorld();
 
 	ASphereWorldGameState* gs = w->GetGameState<ASphereWorldGameState>();
@@ -24,7 +23,7 @@ void UMainMenuUserWidget::PlayButtonPress()
 
 	gs->SetPawn(pc->GetPawn<ACustomARPawn>());
 
-	gs->BeginGame();
+	gs->SetGameState(ARGameStates::Gameplay);
 }
 
 void UMainMenuUserWidget::NativeConstruct()

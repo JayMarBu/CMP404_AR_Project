@@ -39,16 +39,23 @@ public:
 	void SpawnControllerEnemy();
 
 	inline ARGameStates GetGameState() const { return m_gameState;}
-	inline void SetGameState(const ARGameStates& state) {m_gameState = state;}
+	void SetGameState(const ARGameStates& state);
 
-	void BeginGame();
 
 	void SetPawn(ACustomARPawn* pawn);
 	ACustomARPawn* GetPawn();
 
 	AMainMenuHud* GetHUD();
 
+	void CleanupSphereWorld();
+	void CleanupEnemies();
+	void CleanupGame();
+
 protected:
+
+	void BeginGame();
+
+	void OnPlayerDeath();
 
 	ASphereWorld* m_sphereWorld;
 
