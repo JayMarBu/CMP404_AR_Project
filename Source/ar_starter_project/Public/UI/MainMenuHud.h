@@ -7,6 +7,7 @@
 #include "MainMenuHud.generated.h"
 
 class UMainMenuUserWidget;
+class UGameUIWidget;
 
 /**
  * 
@@ -19,6 +20,7 @@ class AR_STARTER_PROJECT_API AMainMenuHud : public AHUD
 protected:
 	UPROPERTY();
 	UMainMenuUserWidget* m_mainMenuWidget;
+	UGameUIWidget* m_gameHUDWidget;
 
 	TSharedPtr<class SGameplayWidget> GameplayWidget;
 	TSharedPtr<class SWidget> GameplayWidgetContainer;
@@ -26,7 +28,10 @@ protected:
 public:
 	
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UMainMenuUserWidget> m_widgetClass;
+	TSubclassOf<UMainMenuUserWidget> m_mainMenuWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameUIWidget> m_gameUIWidgetClass;
 
 	// Methods ************************************************************************************
 
@@ -39,15 +44,18 @@ public:
 	AMainMenuHud();
 	
 	virtual void ShowMainMenu();
-
 	virtual void HideMainMenu();
 
+	virtual void ShowGameHUD();
+	virtual void HideGameHUD();
 
 	void SpawnEnemy();
 	void SpawnControllerEnemy();
 
-	void ShowDebugMenu();
-	void RemoveDebugMenu();
+	virtual void ShowDebugMenu();
+	virtual void RemoveDebugMenu();
+
+	virtual void SpawnHearts(const unsigned int& num);
 
 
 	virtual void DrawHUD() override;

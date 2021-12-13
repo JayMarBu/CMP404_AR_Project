@@ -18,34 +18,46 @@ class AR_STARTER_PROJECT_API ACustomARPawn : public APawn
 {
 	GENERATED_BODY()
 
+	// Members ************************************************************************************
 public:
-	// Sets default values for this pawn's properties
-	ACustomARPawn();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class AProjectile> ProjectileClass;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USceneComponent* ScnComponent;
-
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCameraComponent* CameraComponent;
 
-
 	UPROPERTY(VisibleDefaultsOnly)
 		USphereComponent* CollisionComponent;
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AProjectile> ProjectileClass;
+
+	FTimerHandle cameraTicker;
+	float cameraNotifyLoopTime;
+
+	ASphereWorld* m_sphereWorld;
+
+	FVector m_viewLocation;
+
+	UPROPERTY(EditDefaultsOnly)
+	float m_maxHP = 10;
+
+	UPROPERTY(EditAnywhere)
+	float m_currentHP;
+
+	// Methods ************************************************************************************
+public:
+	ACustomARPawn();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:
+	virtual void Tick(float DeltaTime) override;
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void SpawnSphereWorld();
 
@@ -56,14 +68,5 @@ public:
 	void Hit();
 
 	void InitGame();
-
-private:
-
-	FTimerHandle cameraTicker;
-	float cameraNotifyLoopTime;
-
-	ASphereWorld* m_sphereWorld;
-
-	FVector m_viewLocation;
 
 };

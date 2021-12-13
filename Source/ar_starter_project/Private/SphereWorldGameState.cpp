@@ -56,13 +56,16 @@ void ASphereWorldGameState::BeginGame()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
 
-	AMainMenuHud* hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(!m_hud)
+		m_hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
-	hud->HideMainMenu();
-	hud->ShowDebugMenu();
+	m_hud->HideMainMenu();
+	m_hud->ShowDebugMenu();
+	m_hud->ShowGameHUD();
+
+	m_hud->SpawnHearts(10);
 
 	m_pawn->InitGame();
-	m_pawn->SpawnSphereWorld();
 
 	m_gameState = ARGameStates::Gameplay;
 	m_score = 0;

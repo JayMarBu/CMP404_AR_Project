@@ -9,6 +9,7 @@
 
 class ASphereWorld;
 class ACustomARPawn;
+class AMainMenuHud;
 
 enum class ARGameStates
 {
@@ -54,6 +55,8 @@ protected:
 	ARGameStates m_gameState;
 
 	ACustomARPawn* m_pawn;
+
+	AMainMenuHud* m_hud = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int m_score;

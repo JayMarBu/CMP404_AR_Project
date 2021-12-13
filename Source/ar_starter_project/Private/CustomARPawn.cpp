@@ -126,16 +126,9 @@ void ACustomARPawn::Hit()
 void ACustomARPawn::InitGame()
 {
 	UARSessionConfig* Config = NewObject<UARSessionConfig>();
-	//Config->
 	UARBlueprintLibrary::StartARSession(Config);
 
-#if PLATFORM_ANDROID
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Android")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
-#endif
-#if PLATFORM_WINDOWS
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("platform: Windows")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
-
-#endif
+	m_currentHP = m_maxHP;
 
 	SpawnSphereWorld();
 }

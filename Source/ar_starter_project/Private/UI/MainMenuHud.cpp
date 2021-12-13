@@ -9,6 +9,7 @@
 #include "GameFramework/HUD.h"
 #include "GameFramework/PlayerController.h"
 #include "SphereWorldGameState.h"
+#include "UI/GameUIWidget.h"
 
 void AMainMenuHud::BeginPlay()
 {
@@ -24,9 +25,9 @@ AMainMenuHud::AMainMenuHud()
 
 void AMainMenuHud::ShowMainMenu()
 {
-	if (m_widgetClass)
+	if (m_mainMenuWidgetClass)
 	{
-		m_mainMenuWidget = CreateWidget<UMainMenuUserWidget>(GetWorld(), m_widgetClass);
+		m_mainMenuWidget = CreateWidget<UMainMenuUserWidget>(GetWorld(), m_mainMenuWidgetClass);
 		if (m_mainMenuWidget)
 		{
 			m_mainMenuWidget->AddToViewport();
@@ -39,6 +40,26 @@ void AMainMenuHud::HideMainMenu()
 	if (m_mainMenuWidget)
 	{
 		m_mainMenuWidget->RemoveFromParent();
+	}
+}
+
+void AMainMenuHud::ShowGameHUD()
+{
+	if (m_gameUIWidgetClass)
+	{
+		m_gameHUDWidget = CreateWidget<UGameUIWidget>(GetWorld(), m_gameUIWidgetClass);
+		if (m_gameHUDWidget)
+		{
+			m_gameHUDWidget->AddToViewport();
+		}
+	}
+}
+
+void AMainMenuHud::HideGameHUD()
+{
+	if (m_gameHUDWidget)
+	{
+		m_gameHUDWidget->RemoveFromParent();
 	}
 }
 
@@ -77,6 +98,11 @@ void AMainMenuHud::RemoveDebugMenu()
 			//PlayerOwner->SetInputMode(FInputModeGameAndUI());
 		}
 	}
+}
+
+void AMainMenuHud::SpawnHearts(const unsigned int& num)
+{
+	m_gameHUDWidget->SpawnHearts(num);
 }
 
 void AMainMenuHud::DrawHUD()

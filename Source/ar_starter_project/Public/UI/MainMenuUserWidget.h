@@ -40,5 +40,5 @@ public:
 	UMainMenuUserWidget(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION()
-	void PlayButtonPress();
+		void PlayButtonPress();
 };
