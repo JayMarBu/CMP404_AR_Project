@@ -11,6 +11,7 @@
 #include "SphereWorldGameState.h"
 #include "UI/GameUIWidget.h"
 #include "UI/DeathScreenWidget.h"
+#include "UI/SettingsWidget.h"
 
 void AMainMenuHud::BeginPlay()
 {
@@ -81,6 +82,26 @@ void AMainMenuHud::HideDeathScreen()
 	if (m_deathWidget)
 	{
 		m_deathWidget->RemoveFromParent();
+	}
+}
+
+void AMainMenuHud::ShowSettingsScreen()
+{
+	if (m_settingsWidgetClass)
+	{
+		m_settingsWidget = CreateWidget<USettingsWidget>(GetWorld(), m_settingsWidgetClass);
+		if (m_settingsWidget)
+		{
+			m_settingsWidget->AddToViewport();
+		}
+	}
+}
+
+void AMainMenuHud::HideSettingsScreen()
+{
+	if (m_settingsWidget)
+	{
+		m_settingsWidget->RemoveFromParent();
 	}
 }
 

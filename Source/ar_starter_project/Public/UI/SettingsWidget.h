@@ -8,6 +8,8 @@
 
 class UTextBlock;
 class UButton;
+class USlider;
+class UCheckBox;
 /**
  * 
  */
@@ -17,17 +19,26 @@ class AR_STARTER_PROJECT_API USettingsWidget : public UUserWidget
 	GENERATED_BODY()
 	// Members ************************************************************************************
 protected:
-	//UPROPERTY(meta = (BindWidget))
-	//UTextBlock* HighscoreText;
+	UPROPERTY(meta = (BindWidget))
+	UButton* PlayButton;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* PlayButton;
+	UButton* OptionsButton;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* OptionsButton;
+	UButton* InstructionsButton;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* InstructionsButton;
+	UCheckBox* MuteVFXToggle;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* VFXSlider;
+
+	UPROPERTY(meta = (BindWidget))
+	UCheckBox* MuteMusicToggle;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* MusicSlider;
 
 	// Methods ************************************************************************************
 
@@ -37,5 +48,8 @@ protected:
 public:
 
 	UFUNCTION()
-		void PlayButtonPress();
+	void PlayButtonPress();
+
+	UFUNCTION()
+	void InfoButtonPressed();
 };

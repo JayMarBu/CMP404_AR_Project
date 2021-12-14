@@ -8,7 +8,6 @@
 
 class UTextBlock;
 class UButton;
-
 /**
  * 
  */
@@ -41,4 +40,10 @@ public:
 
 	UFUNCTION()
 		void PlayButtonPress();
+
+	UFUNCTION()
+		void InfoButtonPress();
+
+	UFUNCTION()
+		void SettingsButtonPress();
 };

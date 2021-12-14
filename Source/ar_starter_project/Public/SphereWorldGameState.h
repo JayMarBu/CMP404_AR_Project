@@ -67,6 +67,8 @@ protected:
 
 	void MainMenu();
 
+	void SettingsMenu();
+
 	ASphereWorld* m_sphereWorld;
 
 	TArray<AOrbitObject*> m_enemies;

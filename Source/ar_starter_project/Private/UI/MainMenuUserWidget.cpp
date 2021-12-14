@@ -16,14 +16,17 @@ UMainMenuUserWidget::UMainMenuUserWidget(const FObjectInitializer& ObjectInitial
 
 void UMainMenuUserWidget::PlayButtonPress()
 {
-	UWorld* w = GetWorld();
+	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Gameplay);
+}
 
-	ASphereWorldGameState* gs = w->GetGameState<ASphereWorldGameState>();
-	APlayerController* pc = w->GetFirstPlayerController();
+void UMainMenuUserWidget::InfoButtonPress()
+{
 
-	gs->SetPawn(pc->GetPawn<ACustomARPawn>());
+}
 
-	gs->SetGameState(ARGameStates::Gameplay);
+void UMainMenuUserWidget::SettingsButtonPress()
+{
+	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Options_Menu);
 }
 
 void UMainMenuUserWidget::NativeConstruct()
@@ -31,5 +34,7 @@ void UMainMenuUserWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayButton->OnClicked.AddUniqueDynamic(this, &UMainMenuUserWidget::PlayButtonPress);
+	OptionsButton->OnClicked.AddUniqueDynamic(this, &UMainMenuUserWidget::SettingsButtonPress);
+	InstructionsButton->OnClicked.AddUniqueDynamic(this, &UMainMenuUserWidget::InfoButtonPress);
 }
 

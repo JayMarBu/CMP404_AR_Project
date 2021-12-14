@@ -61,6 +61,12 @@ void ASphereWorldGameState::SetGameState(const ARGameStates& state)
 {
 	m_gameState = state;
 
+	if(!m_pawn)
+		SetPawn(GetWorld()->GetFirstPlayerController()->GetPawn<ACustomARPawn>());
+
+	if (!m_hud)
+		m_hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
 	switch (m_gameState)
 	{
 	case ARGameStates::Gameplay:
@@ -74,6 +80,10 @@ void ASphereWorldGameState::SetGameState(const ARGameStates& state)
 	case ARGameStates::Main_Menu:
 		MainMenu();
 		break;
+
+	case ARGameStates::Options_Menu:
+		SettingsMenu();
+		break;
 	}
 }
 
@@ -82,11 +92,9 @@ void ASphereWorldGameState::BeginGame()
 	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
 	CleanupGame();
 
-	if(!m_hud)
-		m_hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
-
 	m_hud->HideMainMenu();
 	m_hud->HideDeathScreen();
+	m_hud->HideSettingsScreen();
 
 	m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
@@ -116,6 +124,7 @@ void ASphereWorldGameState::OnPlayerDeath()
 	m_hud->HideMainMenu();
 	m_hud->HideGameHUD();
 	m_hud->HideDebugMenu();
+	m_hud->HideSettingsScreen();
 
 	m_hud->ShowDeathScreen();
 	m_hud->SetScore(m_score);
@@ -130,9 +139,20 @@ void ASphereWorldGameState::MainMenu()
 	m_hud->HideGameHUD();
 	m_hud->HideDebugMenu();
 	m_hud->HideDeathScreen();
+	m_hud->HideSettingsScreen();
 
 	m_hud->ShowMainMenu();
 
+}
+
+void ASphereWorldGameState::SettingsMenu()
+{
+	m_hud->HideGameHUD();
+	m_hud->HideDebugMenu();
+	m_hud->HideDeathScreen();
+	m_hud->HideMainMenu();
+
+	m_hud->ShowSettingsScreen();
 }
 
 void ASphereWorldGameState::SetPawn(ACustomARPawn* pawn)
