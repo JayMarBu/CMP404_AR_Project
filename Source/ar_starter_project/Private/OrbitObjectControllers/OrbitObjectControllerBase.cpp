@@ -32,7 +32,7 @@ void UOrbitObjectControllerBase::OnHitCallback()
 
 }
 
-void UOrbitObjectControllerBase::Init(AOrbitObject* obj)
+void UOrbitObjectControllerBase::Init(AOrbitObject* obj, int HP)
 {
 	m_orbitObject = obj;
 	m_orbitObject->hasControllerComponent = true;

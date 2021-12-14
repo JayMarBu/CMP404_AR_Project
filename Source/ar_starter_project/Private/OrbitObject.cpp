@@ -19,11 +19,12 @@ AOrbitObject::AOrbitObject()
 	m_staticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 
 	// Get mesh from Unreal's Reference  Manager. (Right click on object and Get Reference"
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Game/HandheldARBP/CMP404_AR/enemies/untitled.untitled'"));
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
-	m_staticMeshComponent->SetRelativeScale3D(FVector(0.1,0.5,0.5));
+	//m_staticMeshComponent->SetRelativeScale3D(FVector(0.1,0.5,0.5));
 
 	if (!m_collisionComponent)
 	{

@@ -45,7 +45,7 @@ public:
 	UFUNCTION()
 	virtual void OnHitCallback();
 
-	virtual void Init(AOrbitObject* obj);
+	virtual void Init(AOrbitObject* obj, int HP);
 
 	static AOrbitObject* SpawnBaseController(AActor* actor, ASphereWorld* sWorld);
 

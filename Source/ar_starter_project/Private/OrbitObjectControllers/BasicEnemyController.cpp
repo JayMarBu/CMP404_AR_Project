@@ -107,7 +107,7 @@ void UBasicEnemyController::OnHitCallback()
 
 void UBasicEnemyController::Init(AOrbitObject* obj, int HP)
 {
-	Super::Init(obj);
+	Super::Init(obj, HP);
 
 	m_orbitObject->m_onProjectileHitDelegate.AddDynamic(this, &UBasicEnemyController::OnHitCallback);
 

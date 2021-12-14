@@ -4,6 +4,11 @@
 #include "OrbitObjectControllers/HealthObjectController.h"
 #include "SphereWorldGameState.h"
 
+UHealthObjectController::UHealthObjectController()
+{
+
+}
+
 void UHealthObjectController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	if (GetWorld()->GetGameState<ASphereWorldGameState>()->GetGameState() != ARGameStates::Gameplay)
@@ -31,7 +36,7 @@ void UHealthObjectController::TickComponent(float DeltaTime, ELevelTick TickType
 
 void UHealthObjectController::Init(AOrbitObject* obj, int HP)
 {
-	UOrbitObjectControllerBase::Init(obj);	
+	UOrbitObjectControllerBase::Init(obj, HP);	
 
 	m_orbitObject->m_onProjectileHitDelegate.AddDynamic(this, &UHealthObjectController::OnHitCallback);
 

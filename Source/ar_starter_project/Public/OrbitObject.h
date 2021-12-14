@@ -158,7 +158,7 @@ public:
 	void BroadcastHit();
 
 	template <class ComponentClass>
-	void AddControllerComponent();
+	void AddControllerComponent(int HP = 1);
 
 	FVector GetPlayerLocation();
 
@@ -166,11 +166,11 @@ public:
 };
 
 template <class ComponentClass>
-void AOrbitObject::AddControllerComponent()
+void AOrbitObject::AddControllerComponent(int HP)
 {
 	FName componentName("Controller Component");
 
 	m_controllerComponent = NewObject<ComponentClass>(this, ComponentClass::StaticClass(), componentName);
-	m_controllerComponent->Init(this);
+	m_controllerComponent->Init(this, HP);
 	m_controllerComponent->RegisterComponent();
 }
