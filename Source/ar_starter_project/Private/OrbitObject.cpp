@@ -45,7 +45,7 @@ void AOrbitObject::BeginPlay()
 	
 }
 
-void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos)
+void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos, int HP)
 {
 	m_sphereWorld = sphereWorld;
 

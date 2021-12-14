@@ -24,6 +24,8 @@ enum class ARGameStates
 enum class EnemyType
 {
 	Basic,
+	Bulky,
+	Tank,
 	Health
 };
 
@@ -122,6 +124,9 @@ public:
 
 	virtual void AddScore(const unsigned int& in_pts);
 	virtual void SetScore(const unsigned int& in_pts);
+
+	virtual void AddHealth(const unsigned int& hp);
+	virtual void SetHealth(const unsigned int& hp);
 
 	inline virtual unsigned int GetScore() const { return m_score; }
 

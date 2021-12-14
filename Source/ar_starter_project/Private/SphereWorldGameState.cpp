@@ -47,7 +47,7 @@ void ASphereWorldGameState::SpawnEnemy()
 	FVector myLoc = m_sphereWorld->GeneratePositionOnSphere(t, s, m_sphereWorld->m_spawnRadius);
 	AOrbitObject* customActor = GetWorld()->SpawnActor<AOrbitObject>(m_sphereWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
 
-	customActor->Init(m_sphereWorld, FVector(t, s, m_sphereWorld->m_spawnRadius));
+	customActor->Init(m_sphereWorld, FVector(t, s, m_sphereWorld->m_spawnRadius), 1);
 
 	m_enemies.Add(customActor);
 }
@@ -228,6 +228,22 @@ void ASphereWorldGameState::SetScore(const unsigned int& in_pts)
 		m_hud->SetScore(m_score);
 }
 
+void ASphereWorldGameState::AddHealth(const unsigned int& hp)
+{
+	if(!m_pawn)
+		return;
+
+	m_pawn->SetCurrentHealth(m_pawn->GetCurrentHealth()+hp);
+}
+
+void ASphereWorldGameState::SetHealth(const unsigned int& hp)
+{
+	if (!m_pawn)
+		return;
+
+	m_pawn->SetCurrentHealth(hp);
+}
+
 ASphereWorldGameState* ASphereWorldGameState::Get(AActor* actor)
 {
 	return actor->GetWorld()->GetGameState<ASphereWorldGameState>();
@@ -246,6 +262,12 @@ void ASphereWorldGameState::SpawnNewEnemy()
 	{
 	case EnemyType::Basic:
 		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
+		break;
+	case EnemyType::Bulky:
+		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld, 2));
+		break;
+	case EnemyType::Tank:
+		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld, 3));
 		break;
 	case EnemyType::Health:
 		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
@@ -283,6 +305,8 @@ void WaveSpawner::Init(ASphereWorldGameState* in_gameState)
 	gameState = in_gameState;
 
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Basic, 80));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Bulky, 50));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Tank, 10));
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Health, 20));
 
 	totalChance = 0;

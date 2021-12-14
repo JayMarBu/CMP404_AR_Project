@@ -51,7 +51,7 @@ AOrbitObject* UOrbitObjectControllerBase::SpawnBaseController(AActor* actor, ASp
 	FVector myLoc = sWorld->GeneratePositionOnSphere(t, s, sWorld->m_spawnRadius);
 	AOrbitObject* customActor = actor->GetWorld()->SpawnActor<AOrbitObject>(sWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
 
-	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius));
+	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius), 1);
 
 	customActor->AddControllerComponent<UOrbitObjectControllerBase>();
 

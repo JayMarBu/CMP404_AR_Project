@@ -11,6 +11,7 @@
 
 UBasicEnemyController::UBasicEnemyController() 
 {
+
 }
 
 void UBasicEnemyController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -104,7 +105,7 @@ void UBasicEnemyController::OnHitCallback()
 	ASphereWorldGameState::Get(m_orbitObject)->AddScore(m_orbitObject->m_scoreWorth);
 }
 
-void UBasicEnemyController::Init(AOrbitObject* obj)
+void UBasicEnemyController::Init(AOrbitObject* obj, int HP)
 {
 	Super::Init(obj);
 
@@ -120,15 +121,15 @@ void UBasicEnemyController::Init(AOrbitObject* obj)
 
 	m_initXval = m_orbitObject->m_orbitTransform.orbitPosition.X;
 
-	m_maxHP = 1;
+	m_maxHP = HP;
 	m_currentHP = m_maxHP;
 
-	m_orbitObject->m_scoreWorth = 10;
+	m_orbitObject->m_scoreWorth = 10*HP;
 
 	m_shootChance = FMath::RandRange(m_minShootTime, m_maxShootTime);
 }
 
-AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld)
+AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld, int HP)
 {
 	if (actor == nullptr || sWorld == nullptr)
 		return nullptr;
@@ -141,7 +142,7 @@ AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld
 	FVector myLoc = sWorld->GeneratePositionOnSphere(t, s, sWorld->m_spawnRadius);
 	AOrbitObject* customActor = actor->GetWorld()->SpawnActor<AOrbitObject>(sWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
 
-	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius));
+	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius), HP);
 
 	customActor->AddControllerComponent<UBasicEnemyController>();
 

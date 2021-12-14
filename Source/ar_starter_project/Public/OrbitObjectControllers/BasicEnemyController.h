@@ -16,7 +16,7 @@ class AR_STARTER_PROJECT_API UBasicEnemyController : public UOrbitObjectControll
 	GENERATED_BODY()
 
 	// Members ************************************************************************************
-private:
+protected:
 	float m_timeCounter = 0;
 
 	float m_minShootTime = 4;
@@ -71,10 +71,9 @@ public:
 
 	void Shoot();
 
-
 	virtual void OnHitCallback() override;
 
-	virtual void Init(AOrbitObject* obj);
+	virtual void Init(AOrbitObject* obj, int HP);
 
-	static AOrbitObject* SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld);
+	static AOrbitObject* SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld, int HP = 1);
 };

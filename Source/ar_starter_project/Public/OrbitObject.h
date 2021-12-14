@@ -140,7 +140,7 @@ protected:
 
 public:	
 
-	void Init(ASphereWorld* sphereWorld, FVector startPos);
+	void Init(ASphereWorld* sphereWorld, FVector startPos, int HP);
 
 	void FacePlayer();
 
