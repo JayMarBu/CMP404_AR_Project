@@ -24,7 +24,15 @@ AOrbitObject::AOrbitObject()
 
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
-	//m_staticMeshComponent->SetRelativeScale3D(FVector(0.1,0.5,0.5));
+
+	static ConstructorHelpers::FObjectFinder<UMaterial> FoundMaterial(TEXT("Material'/Game/HandheldARBP/CMP404_AR/enemies/EnemyMaterial.EnemyMaterial'"));
+	if (FoundMaterial.Succeeded())
+	{
+		m_storedMaterial = FoundMaterial.Object;
+	}
+	m_dynamicMaterialInst = UMaterialInstanceDynamic::Create(m_storedMaterial, m_staticMeshComponent);
+
+	m_staticMeshComponent->SetMaterial(0, m_dynamicMaterialInst);
 
 	if (!m_collisionComponent)
 	{

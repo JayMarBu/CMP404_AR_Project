@@ -131,6 +131,10 @@ public:
 
 	unsigned int id = 0;
 
+
+	UMaterial* m_storedMaterial;
+	UMaterialInstanceDynamic* m_dynamicMaterialInst;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();

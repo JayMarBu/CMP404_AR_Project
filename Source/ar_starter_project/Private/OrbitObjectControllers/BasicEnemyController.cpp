@@ -92,7 +92,7 @@ void UBasicEnemyController::Shoot()
 	if (Projectile)
 	{
 		FVector LaunchDirection = shootDir;
-		Projectile->FireInDirection(LaunchDirection, m_orbitObject->GetSphereWorld(), ProjectileShooter::ENEMY, 50);
+		Projectile->FireInDirection(LaunchDirection, m_orbitObject->GetSphereWorld(), ProjectileShooter::ENEMY, 150);
 	}
 
 	m_state = State::Move;
@@ -102,6 +102,7 @@ void UBasicEnemyController::Shoot()
 void UBasicEnemyController::OnHitCallback()
 {
 	m_currentHP--;
+	m_orbitObject->m_dynamicMaterialInst->SetScalarParameterValue("HPCurrent", m_currentHP);
 	ASphereWorldGameState::Get(m_orbitObject)->AddScore(m_orbitObject->m_scoreWorth);
 }
 
@@ -127,6 +128,11 @@ void UBasicEnemyController::Init(AOrbitObject* obj, int HP)
 	m_orbitObject->m_scoreWorth = 10*HP;
 
 	m_shootChance = FMath::RandRange(m_minShootTime, m_maxShootTime);
+
+	m_orbitObject->m_dynamicMaterialInst->SetScalarParameterValue("HPMax", (float)m_maxHP);
+	m_orbitObject->m_dynamicMaterialInst->SetScalarParameterValue("HPCurrent", m_currentHP);
+
+	m_orbitObject->m_dynamicMaterialInst->SetScalarParameterValue("isHealth", 0);
 }
 
 AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld, int HP)
@@ -144,7 +150,7 @@ AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld
 
 	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius), HP);
 
-	customActor->AddControllerComponent<UBasicEnemyController>();
+	customActor->AddControllerComponent<UBasicEnemyController>(HP);
 
 	return customActor;
 }

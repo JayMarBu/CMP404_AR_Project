@@ -25,4 +25,7 @@ public:
 	virtual void Init(AOrbitObject* obj, int HP) override;
 
 	virtual void OnHitCallback() override;
+
+
+	static AOrbitObject* SpawnHealthObject(AActor* actor, ASphereWorld* sWorld);
 };

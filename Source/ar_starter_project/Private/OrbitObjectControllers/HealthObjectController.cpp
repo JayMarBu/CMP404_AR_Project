@@ -56,10 +56,32 @@ void UHealthObjectController::Init(AOrbitObject* obj, int HP)
 	m_orbitObject->m_scoreWorth = 50;
 
 	m_shootChance = FMath::RandRange(m_minShootTime, m_maxShootTime);
+
+	m_orbitObject->m_dynamicMaterialInst->SetScalarParameterValue("isHealth", 1);
 }
 
 void UHealthObjectController::OnHitCallback()
 {
 	m_state = UBasicEnemyController::State::Dead;
 	ASphereWorldGameState::Get(m_orbitObject)->AddHealth(5);
+}
+
+AOrbitObject* UHealthObjectController::SpawnHealthObject(AActor* actor, ASphereWorld* sWorld)
+{
+	if (actor == nullptr || sWorld == nullptr)
+		return nullptr;
+
+	float t = FMath::RandRange(0.0f, 360.0f);
+	float s = FMath::RandRange(75.0f, 105.0f);
+
+	FActorSpawnParameters SpawnInfo;
+	FRotator myRot(0, 0, 0);
+	FVector myLoc = sWorld->GeneratePositionOnSphere(t, s, sWorld->m_spawnRadius);
+	AOrbitObject* customActor = actor->GetWorld()->SpawnActor<AOrbitObject>(sWorld->m_player->GetActorLocation() + myLoc, myRot, SpawnInfo);
+
+	customActor->Init(sWorld, FVector(t, s, sWorld->m_spawnRadius), 1);
+
+	customActor->AddControllerComponent<UHealthObjectController>();
+
+	return customActor;
 }

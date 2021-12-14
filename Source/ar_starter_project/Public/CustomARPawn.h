@@ -76,6 +76,6 @@ public:
 	virtual inline unsigned int GetMaxHealth() const { return m_maxHP;} 
 	virtual inline unsigned int GetCurrentHealth() const { return m_currentHP;} 
 
-	virtual void SetCurrentHealth(const unsigned int& hp) { m_currentHP = (hp > m_maxHP)? m_maxHP : hp;} 
+	virtual void SetCurrentHealth(const unsigned int& hp);
 
 };

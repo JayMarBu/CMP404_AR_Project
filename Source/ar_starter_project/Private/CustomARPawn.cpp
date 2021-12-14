@@ -132,8 +132,7 @@ void ACustomARPawn::Hit()
 		OnDeath();
 		return;
 	}
-
-	GetWorld()->GetGameState<ASphereWorldGameState>()->GetHUD()->SetCurrentHealth(m_currentHP);
+	ASphereWorldGameState::Get(this)->GetHUD()->SetCurrentHealth(m_currentHP);
 }
 
 void ACustomARPawn::InitGame()
@@ -150,4 +149,10 @@ void ACustomARPawn::OnDeath()
 	gs->GetHUD()->SetCurrentHealth(0);
 
 	gs->SetGameState(ARGameStates::Death_menu);
+}
+
+void ACustomARPawn::SetCurrentHealth(const unsigned int& hp)
+{
+	 m_currentHP = (hp > m_maxHP) ? m_maxHP : hp;
+	 ASphereWorldGameState::Get(this)->GetHUD()->SetCurrentHealth(m_currentHP);
 }

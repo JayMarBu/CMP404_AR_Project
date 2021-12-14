@@ -36,6 +36,9 @@ void UOrbitObjectControllerBase::Init(AOrbitObject* obj, int HP)
 {
 	m_orbitObject = obj;
 	m_orbitObject->hasControllerComponent = true;
+
+	m_maxHP = HP;
+	m_currentHP = m_maxHP;
 }
 
 AOrbitObject* UOrbitObjectControllerBase::SpawnBaseController(AActor* actor, ASphereWorld* sWorld)

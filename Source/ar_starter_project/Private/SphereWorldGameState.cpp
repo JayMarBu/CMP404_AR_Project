@@ -13,6 +13,7 @@
 #include "UI/MainMenuHud.h"
 #include <Blueprint/UserWidget.h>
 #include <Kismet/GameplayStatics.h>
+#include "OrbitObjectControllers/HealthObjectController.h"
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
@@ -99,7 +100,7 @@ void ASphereWorldGameState::BeginGame()
 	m_hud->HideDeathScreen();
 	m_hud->HideSettingsScreen();
 
-	m_hud->ShowDebugMenu();
+	//m_hud->ShowDebugMenu();
 	m_hud->ShowGameHUD();
 
 	/*GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, UGameplayStatics::GetPlatformName());
@@ -261,7 +262,7 @@ void ASphereWorldGameState::SpawnNewEnemy()
 	switch (type)
 	{
 	case EnemyType::Basic:
-		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
+		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld, 1));
 		break;
 	case EnemyType::Bulky:
 		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld, 2));
@@ -270,7 +271,7 @@ void ASphereWorldGameState::SpawnNewEnemy()
 		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld, 3));
 		break;
 	case EnemyType::Health:
-		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
+		m_enemies.Add(UHealthObjectController::SpawnHealthObject(this, m_sphereWorld));
 		break;
 	}
 
@@ -282,7 +283,7 @@ void ASphereWorldGameState::RemoveEnemy(AOrbitObject* oObject)
 	m_waveSpawner.waveEnemyCountCurrent--;
 	m_hud->SetEnemyCount(m_waveSpawner.waveEnemyCountCurrent, m_waveSpawner.waveEnemyCount);
 	m_enemies.Remove(oObject);
-	SetScore(m_enemies.Num());
+	//SetScore(m_enemies.Num());
 }
 
 void ASphereWorldGameState::NextWave()
@@ -304,10 +305,10 @@ void WaveSpawner::Init(ASphereWorldGameState* in_gameState)
 {
 	gameState = in_gameState;
 
-	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Basic, 80));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Basic, 65));
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Bulky, 50));
-	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Tank, 10));
-	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Health, 20));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Tank, 20));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Health, 25));
 
 	totalChance = 0;
 	for (const TPair<EnemyType, float>& pair : spawnRates)
