@@ -52,10 +52,6 @@ protected:
 public:
 
 	AMainMenuHud();
-	
-	void ShowMenu();
-
-	void HideMenu();
 
 	virtual void ShowMainMenu();
 	virtual void HideMainMenu();
@@ -77,6 +73,8 @@ public:
 
 	virtual void SpawnHearts(const unsigned int& num);
 	virtual void SetCurrentHealth(const unsigned int& num);
+	virtual void SetEnemyCount(const unsigned int& currentEnemiesRemaining, const unsigned int& totalEneimes);
+	virtual void SetWaveNum(const unsigned int& num);
 
 	virtual void SetScore(const unsigned int& num);
 

@@ -25,6 +25,12 @@ protected:
 		UTextBlock* ScoreText;
 
 	UPROPERTY(meta = (BindWidget))
+		UTextBlock* EnemiesRemainingText;
+
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* WaveCountText;
+
+	UPROPERTY(meta = (BindWidget))
 		UButton* MenuButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -50,6 +56,9 @@ public:
 	void SetHealth(const unsigned int& num);
 
 	virtual void SetScore(const unsigned int& num);
+
+	virtual void SetEnemiesRemaining(const unsigned int& currentEnemiesRemaining, const unsigned int& totalEneimes);
+	virtual void SetWaveCount(const unsigned int& num);
 
 	UFUNCTION()
 	void MenuButtonPressed();

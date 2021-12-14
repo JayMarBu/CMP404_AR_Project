@@ -152,6 +152,22 @@ void AMainMenuHud::SetCurrentHealth(const unsigned int& num)
 	m_gameHUDWidget->SetHealth(num);
 }
 
+void AMainMenuHud::SetEnemyCount(const unsigned int& currentEnemiesRemaining, const unsigned int& totalEneimes)
+{
+	if(ASphereWorldGameState::Get(this)->GetGameState() != ARGameStates::Gameplay)
+		return;
+
+	m_gameHUDWidget->SetEnemiesRemaining(currentEnemiesRemaining,totalEneimes);
+}
+
+void AMainMenuHud::SetWaveNum(const unsigned int& num)
+{
+	if (ASphereWorldGameState::Get(this)->GetGameState() != ARGameStates::Gameplay)
+		return;
+
+	m_gameHUDWidget->SetWaveCount(num);
+}
+
 void AMainMenuHud::SetScore(const unsigned int& num)
 {
 	ARGameStates gState = ASphereWorldGameState::Get(this)->GetGameState();

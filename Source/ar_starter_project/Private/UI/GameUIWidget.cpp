@@ -60,6 +60,20 @@ void UGameUIWidget::SetScore(const unsigned int& num)
 	ScoreText->SetText(FText::FromString(text));
 }
 
+void UGameUIWidget::SetEnemiesRemaining(const unsigned int& currentEnemiesRemaining, const unsigned int& totalEneimes)
+{
+	FString text = FString::FromInt(totalEneimes - currentEnemiesRemaining) + "/" + FString::FromInt(totalEneimes);
+
+	EnemiesRemainingText->SetText(FText::FromString(text));
+}
+
+void UGameUIWidget::SetWaveCount(const unsigned int& num)
+{
+	FString text = "Wave: " + FString::FromInt(num);
+
+	WaveCountText->SetText(FText::FromString(text));
+}
+
 void UGameUIWidget::MenuButtonPressed()
 {
 	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Main_Menu);

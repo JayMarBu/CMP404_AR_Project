@@ -48,14 +48,11 @@ void UBasicEnemyController::TickMoveState(float DeltaTime)
 	m_pingPongCounter += DeltaTime * m_pingPongSpeed;
 	m_orbitObject->m_orbitTransform.OscillateAxis(FOrbitTransform::X, m_initXval, FMath::Cos(m_pingPongCounter) * m_pingPongAmplitude);
 
-	if(m_state!= State::Attack && m_timeCounter > m_minShootTime)
+	if(m_state!= State::Attack && m_timeCounter > m_shootChance)
 	{
-		float chance = FMath::RandRange(0, 10000);
-		if(chance <= m_shootChance || m_timeCounter >= m_maxShootTime)
-		{
-			m_state = State::Attack;
-			m_timeCounter = 0;
-		}
+		m_state = State::Attack;
+		m_timeCounter = 0;
+		m_shootChance = FMath::RandRange(m_minShootTime, m_maxShootTime);
 	}
 }
 
@@ -74,6 +71,7 @@ void UBasicEnemyController::TickDeadState(float DeltaTime)
 {
 	// TODO death animation/vfx stuff
 
+	ASphereWorldGameState::Get(m_orbitObject)->RemoveEnemy(m_orbitObject);
 	m_orbitObject->Destroy();
 }
 
@@ -92,7 +90,7 @@ void UBasicEnemyController::Shoot()
 	AEnemyProjectile* Projectile = GetWorld()->SpawnActor<AEnemyProjectile>(AEnemyProjectile::StaticClass(), m_orbitObject->GetActorLocation()+(shootDir*55), rot, SpawnParams);
 	if (Projectile)
 	{
-		FVector LaunchDirection = shootDir;//camRot.Vector();
+		FVector LaunchDirection = shootDir;
 		Projectile->FireInDirection(LaunchDirection, m_orbitObject->GetSphereWorld(), ProjectileShooter::ENEMY, 50);
 	}
 
@@ -126,6 +124,8 @@ void UBasicEnemyController::Init(AOrbitObject* obj)
 	m_currentHP = m_maxHP;
 
 	m_orbitObject->m_scoreWorth = 10;
+
+	m_shootChance = FMath::RandRange(m_minShootTime, m_maxShootTime);
 }
 
 AOrbitObject* UBasicEnemyController::SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld)

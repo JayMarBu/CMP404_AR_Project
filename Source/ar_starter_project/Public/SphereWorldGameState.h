@@ -10,6 +10,7 @@
 class ASphereWorld;
 class ACustomARPawn;
 class AMainMenuHud;
+class WaveSpawner;
 
 enum class ARGameStates
 {
@@ -20,6 +21,53 @@ enum class ARGameStates
 	Death_menu
 };
 
+enum class EnemyType
+{
+	Basic,
+	Health
+};
+
+class WaveSpawner
+{
+	// Members ************************************************************************************
+public:
+
+	unsigned int waveNumber;
+	unsigned int waveEnemyCount;
+	unsigned int waveEnemyCountCurrent;
+
+	float enemySpawnTime;
+
+	TArray<TPair<EnemyType, float>> spawnRates;
+	float totalChance;
+
+	ASphereWorldGameState* gameState;
+
+private:
+	float m_waveEnemyTrueCount;
+
+	unsigned int enemiesSpawned;
+
+	// Methods ************************************************************************************
+public:
+
+	void Init(ASphereWorldGameState* gameState);
+	void Reset();
+
+	void NewWave();
+
+	void WaveStart();
+	void WaveTick();
+
+	EnemyType SpawnEnemy();
+
+	void Swap(TPair<EnemyType, float>* xp, TPair<EnemyType, float>* yp);
+
+	// A function to implement bubble sort
+	void BubbleSort(TArray<TPair<EnemyType, float>> arr, int n);
+
+};
+
 /**
  * 
  */
@@ -27,6 +75,28 @@ UCLASS()
 class AR_STARTER_PROJECT_API ASphereWorldGameState : public AGameStateBase
 {
 	GENERATED_BODY()
+
+	// Members ************************************************************************************
+public:
+
+	FTimerHandle m_spawningTicker;
+
+protected:
+	ASphereWorld* m_sphereWorld;
+
+	TArray<AOrbitObject*> m_enemies;
+
+	ARGameStates m_gameState;
+
+	ACustomARPawn* m_pawn;
+
+	AMainMenuHud* m_hud = nullptr;
+
+	unsigned int m_score;
+
+	WaveSpawner m_waveSpawner;
+
+	// Methods ************************************************************************************
 public:
 	ASphereWorldGameState();
 
@@ -40,7 +110,6 @@ public:
 
 	inline ARGameStates GetGameState() const { return m_gameState;}
 	void SetGameState(const ARGameStates& state);
-
 
 	void SetPawn(ACustomARPawn* pawn);
 	ACustomARPawn* GetPawn();
@@ -59,6 +128,10 @@ public:
 	static ASphereWorldGameState* Get(AActor* actor);
 	static ASphereWorldGameState* Get(class UUserWidget* actor);
 
+	void SpawnNewEnemy();
+	void RemoveEnemy(AOrbitObject* oObject);
+	void NextWave();
+
 protected:
 
 	void BeginGame();
@@ -68,16 +141,6 @@ protected:
 	void MainMenu();
 
 	void SettingsMenu();
-
-	ASphereWorld* m_sphereWorld;
-
-	TArray<AOrbitObject*> m_enemies;
-
-	ARGameStates m_gameState;
-
-	ACustomARPawn* m_pawn;
-
-	AMainMenuHud* m_hud = nullptr;
-
-	unsigned int m_score;
 };
+
+

@@ -4,6 +4,7 @@
 #include "SphereWorldGameState.h"
 #include "SphereWorld.h"
 #include "Math/UnrealMathUtility.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "ARBlueprintLibrary.h"
 #include "OrbitObjectControllers/OrbitObjectControllerBase.h"
 #include "OrbitObjectControllers/BasicEnemyController.h"
@@ -16,6 +17,8 @@
 ASphereWorldGameState::ASphereWorldGameState()
 {
 	m_gameState = ARGameStates::Main_Menu;
+
+	m_waveSpawner.Init(this);
 }
 
 ASphereWorld* ASphereWorldGameState::CreateSphereWorld(FVector worldPosition, FTransform trans)
@@ -117,6 +120,9 @@ void ASphereWorldGameState::BeginGame()
 
 	m_gameState = ARGameStates::Gameplay;
 	SetScore(0);
+
+	m_waveSpawner.Reset();
+	m_waveSpawner.WaveStart();
 }
 
 void ASphereWorldGameState::OnPlayerDeath()
@@ -230,4 +236,145 @@ ASphereWorldGameState* ASphereWorldGameState::Get(AActor* actor)
 ASphereWorldGameState* ASphereWorldGameState::Get(UUserWidget* widget)
 {
 	return widget->GetWorld()->GetGameState<ASphereWorldGameState>();
+}
+
+void ASphereWorldGameState::SpawnNewEnemy()
+{
+	EnemyType type = m_waveSpawner.SpawnEnemy();
+
+	switch (type)
+	{
+	case EnemyType::Basic:
+		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
+		break;
+	case EnemyType::Health:
+		m_enemies.Add(UBasicEnemyController::SpawnBasicEnemy(this, m_sphereWorld));
+		break;
+	}
+
+	m_waveSpawner.WaveTick();
+}
+
+void ASphereWorldGameState::RemoveEnemy(AOrbitObject* oObject)
+{
+	m_waveSpawner.waveEnemyCountCurrent--;
+	m_hud->SetEnemyCount(m_waveSpawner.waveEnemyCountCurrent, m_waveSpawner.waveEnemyCount);
+	m_enemies.Remove(oObject);
+	SetScore(m_enemies.Num());
+}
+
+void ASphereWorldGameState::NextWave()
+{
+
+	if(m_waveSpawner.waveEnemyCountCurrent > 0)
+		m_waveSpawner.WaveTick();
+	else
+		m_waveSpawner.WaveStart();
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("test")));
+}
+
+
+// **************************************************************************************************************************************************
+// Wave Spawner Methods																																*
+// **************************************************************************************************************************************************
+
+void WaveSpawner::Init(ASphereWorldGameState* in_gameState)
+{
+	gameState = in_gameState;
+
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Basic, 80));
+	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Health, 20));
+
+	totalChance = 0;
+	for (const TPair<EnemyType, float>& pair : spawnRates)
+	{
+		totalChance+= pair.Value;
+	}
+
+	BubbleSort(spawnRates, spawnRates.Num());
+}
+
+void WaveSpawner::Reset()
+{
+	
+	waveNumber = 0;
+	waveEnemyCount = 6;
+	m_waveEnemyTrueCount = 6;
+
+	enemySpawnTime = 2;
+}
+
+void WaveSpawner::NewWave()
+{
+	enemiesSpawned = 0;
+	waveNumber++;
+
+	m_waveEnemyTrueCount = m_waveEnemyTrueCount + ((float)waveNumber*0.33f);
+
+	waveEnemyCount = FMath::RoundToInt(m_waveEnemyTrueCount);
+	waveEnemyCountCurrent = waveEnemyCount;
+
+	enemySpawnTime = enemySpawnTime - (1/((float)waveEnemyCount*0.33f));
+
+	gameState->GetHUD()->SetEnemyCount(waveEnemyCountCurrent,waveEnemyCount);
+	gameState->GetHUD()->SetWaveNum(waveNumber);
+}
+
+void WaveSpawner::WaveStart()
+{
+	NewWave();
+
+	WaveTick();
+}
+
+void WaveSpawner::WaveTick()
+{
+	if (enemiesSpawned < waveEnemyCount)
+	{
+		gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::SpawnNewEnemy, enemySpawnTime, false, enemySpawnTime);
+		return;
+	}
+
+	gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::NextWave, 2, false, 2);
+}
+
+EnemyType WaveSpawner::SpawnEnemy()
+{
+	enemiesSpawned++;
+
+	float r = FMath::RandRange(0.0f,totalChance);
+
+	for (const TPair<EnemyType, float>& pair : spawnRates)
+	{
+		if(r <= pair.Value)
+		{
+			return pair.Key;
+		}
+
+		r-= pair.Value;
+	}
+
+	return spawnRates[spawnRates.Num()-1].Key;
+}
+
+void WaveSpawner::Swap(TPair<EnemyType, float>* xp, TPair<EnemyType, float>* yp)
+{
+	TPair<EnemyType, float> temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+
+void WaveSpawner::BubbleSort(TArray<TPair<EnemyType, float>> arr, int n)
+{
+	int i, j;
+	for (i = 0; i < n - 1; i++)
+	{
+		for (j = 0; j < n - i - 1; j++)
+		{
+			if (arr[j].Value < arr[j + 1].Value)
+			{
+				Swap(&arr[j], &arr[j + 1]);
+			}
+		}
+	}
 }

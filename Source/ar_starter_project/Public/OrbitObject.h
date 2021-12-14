@@ -129,6 +129,8 @@ public:
 
 	unsigned int m_scoreWorth;
 
+	unsigned int id = 0;
+
 	//Methods *************************************************************************************
 public:	
 	AOrbitObject();
