@@ -196,8 +196,11 @@ void ASphereWorldGameState::CleanupEnemies()
 
 	for (auto e: m_enemies)
 	{
-		e->Destroy();
-		e = nullptr;
+		if(e != nullptr)
+		{
+			e->Destroy();
+			e = nullptr;
+		}
 	}
 
 	m_enemies.Empty();

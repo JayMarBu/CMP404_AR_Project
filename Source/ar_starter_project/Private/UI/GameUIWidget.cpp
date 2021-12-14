@@ -7,12 +7,15 @@
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "SphereWorldGameState.h"
+#include "FMODBlueprintStatics.h"
 
 void UGameUIWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	MenuButton->OnClicked.AddUniqueDynamic(this, &UGameUIWidget::MenuButtonPressed);
+
+	TestEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/UI_Sounds/switch_006"));
 }
 
 void UGameUIWidget::SpawnHearts(const unsigned int& num)
@@ -77,4 +80,6 @@ void UGameUIWidget::SetWaveCount(const unsigned int& num)
 void UGameUIWidget::MenuButtonPressed()
 {
 	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Main_Menu);
+	FTransform tr = ASphereWorldGameState::Get(this)->GetPawn()->GetActorTransform();
+	UFMODBlueprintStatics::PlayEventAtLocation(this, TestEvent, tr, true);
 }

@@ -6,12 +6,16 @@
 #include "Components/TextBlock.h"
 #include "SphereWorldGameState.h"
 
+#include "FMODBlueprintStatics.h"
+
 void UDeathScreenWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	PlayButton->OnClicked.AddUniqueDynamic(this, &UDeathScreenWidget::PlayButtonPress);
 	ReturnButton->OnClicked.AddUniqueDynamic(this, &UDeathScreenWidget::ReturnButtonPress);
+
+	TestEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/UI_Sounds/switch_006"));
 }
 
 UDeathScreenWidget::UDeathScreenWidget(const FObjectInitializer& ObjectInitializer)
@@ -23,11 +27,15 @@ UDeathScreenWidget::UDeathScreenWidget(const FObjectInitializer& ObjectInitializ
 void UDeathScreenWidget::PlayButtonPress()
 {
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SetGameState(ARGameStates::Gameplay);
+	FTransform tr = ASphereWorldGameState::Get(this)->GetPawn()->GetActorTransform();
+	UFMODBlueprintStatics::PlayEventAtLocation(this, TestEvent, tr, true);
 }
 
 void UDeathScreenWidget::ReturnButtonPress()
 {
 	ASphereWorldGameState::Get(this)->SetGameState(ARGameStates::Main_Menu);
+	FTransform tr = ASphereWorldGameState::Get(this)->GetPawn()->GetActorTransform();
+	UFMODBlueprintStatics::PlayEventAtLocation(this, TestEvent, tr, true);
 }
 
 void UDeathScreenWidget::SetScore(const unsigned int& num)

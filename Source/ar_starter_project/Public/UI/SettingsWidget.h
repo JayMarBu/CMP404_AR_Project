@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FMODEvent.h"
 #include "SettingsWidget.generated.h"
 
 class UTextBlock;
@@ -40,6 +41,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	USlider* MusicSlider;
 
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* TestEvent;
+
 	// Methods ************************************************************************************
 
 protected:
@@ -52,4 +56,7 @@ public:
 
 	UFUNCTION()
 	void InfoButtonPressed();
+
+	UFUNCTION()
+	void SettingsButtonPressed();
 };

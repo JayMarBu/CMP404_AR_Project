@@ -1,0 +1,3 @@
+download and add FMOD unreal engine 4 plugin version 2.02 for unreal version 4.26
+
+https://www.fmod.com/download#unrealintegration

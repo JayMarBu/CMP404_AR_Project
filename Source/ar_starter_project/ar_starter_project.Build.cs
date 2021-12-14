@@ -12,7 +12,7 @@ public class ar_starter_project : ModuleRules
 
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AugmentedReality", "UMG" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AugmentedReality", "UMG", "FMODStudio" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		

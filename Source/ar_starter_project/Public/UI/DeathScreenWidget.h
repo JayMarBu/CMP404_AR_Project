@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FMODEvent.h"
 #include "DeathScreenWidget.generated.h"
 
 class UTextBlock;
@@ -28,6 +29,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UButton* ReturnButton;
 	
+	UPROPERTY(EditAnywhere)
+		UFMODEvent* TestEvent;
 
 	// Methods ************************************************************************************
 protected:

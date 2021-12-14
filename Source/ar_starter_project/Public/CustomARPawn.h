@@ -7,11 +7,13 @@
 #include "TimerManager.h" 
 #include "Projectile.h"
 //#include "SphereWorld.h"
+#include "FMODEvent.h"
 #include "CustomARPawn.generated.h"
 
 class UCameraComponent;
 class ASphereWorld;
 class USphereComponent;
+//class UFMODEvent;
 
 UCLASS()
 class AR_STARTER_PROJECT_API ACustomARPawn : public APawn
@@ -46,6 +48,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	unsigned int m_currentHP;
+
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* TestEvent;
 
 	// Methods ************************************************************************************
 public:

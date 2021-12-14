@@ -29,6 +29,7 @@ protected:
 	TSharedPtr<class SGameplayWidget> GameplayWidget;
 	TSharedPtr<class SWidget> GameplayWidgetContainer;
 
+
 public:
 	
 	UPROPERTY(EditDefaultsOnly)

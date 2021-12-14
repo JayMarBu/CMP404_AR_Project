@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FMODEvent.h"
 #include "GameUIWidget.generated.h"
 
 class UTextBlock;
@@ -37,6 +38,9 @@ protected:
 		UHorizontalBox* HealthBar;
 
 	TArray<UUserWidget*> m_hearts;
+
+	UPROPERTY(EditAnywhere)
+		UFMODEvent* TestEvent;
 
 public:
 

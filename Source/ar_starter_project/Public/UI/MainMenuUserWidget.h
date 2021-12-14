@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FMODEvent.h"
 #include "MainMenuUserWidget.generated.h"
+
 
 class UTextBlock;
 class UButton;
@@ -29,8 +31,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* InstructionsButton;
 
-	// Methods ************************************************************************************
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* TestEvent;
 
+	// Methods ************************************************************************************
 protected:
 	void NativeConstruct() override;
 

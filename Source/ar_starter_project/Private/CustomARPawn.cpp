@@ -13,6 +13,9 @@
 #include "UI/MainMenuHud.h"
 //#include "Kismet/KismetMathLibrary.h"
 
+//#include "FMODEvent.h"
+#include "FMODBlueprintStatics.h"
+
 
 #define PRINT_DEBUG_LINE_TIME(_line_, _colour_, _time_) UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT(_line_)), true, true, _colour_, _time_)
 #define PRINT_DEBUG_LINE(_line_, _colour_) PRINT_DEBUG_LINE_TIME(_line_, _colour_, 10)
@@ -63,6 +66,8 @@ void ACustomARPawn::BeginPlay()
 	UARBlueprintLibrary::StartARSession(Config);
 
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SetPawn(this);
+
+	TestEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Debug/Wet_Fart_Meme_-_Sound_Effect_HD"));
 }
 
 // Called every frame
@@ -118,6 +123,8 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 		{
 			FVector LaunchDirection = worldDirection;//camRot.Vector();
 			Projectile->FireInDirection(LaunchDirection, m_sphereWorld, ProjectileShooter::PLAYER);
+
+			UFMODBlueprintStatics::PlayEventAtLocation(this, TestEvent, GetTransform(), true);
 		}
 	}
 }
