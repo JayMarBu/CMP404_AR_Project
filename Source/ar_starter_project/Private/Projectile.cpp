@@ -15,26 +15,31 @@
 // Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Setup Root component
 	if (!RootComponent)
 	{
 		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Scene Component"));
 	}
 
+
+	// Setup Collision Component
 	if (!CollisionComponent)
 	{
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 
+		// Initialise collision component in a subclass alterable way
 		InitialiseCollisionShape();
 		CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
 		float radius = 15.0f;
 		CollisionComponent->InitSphereRadius(radius);
 
+		// Set collision component to root
 		RootComponent = CollisionComponent;
 
+		// Setup Mesh component
 		if (!ProjectileMeshComponent)
 		{
 			ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
@@ -44,6 +49,7 @@ AProjectile::AProjectile()
 				ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
 				ProjectileMeshComponent->SetupAttachment(RootComponent);
 				
+				// Calculate mesh scale based on collision shape size
 				float fScale = (radius*2)/100;
 				FVector vScale(fScale);
 
@@ -53,6 +59,7 @@ AProjectile::AProjectile()
 		}
 	}
 
+	// Setup Projectile movement component
 	if (!ProjectileMovementComponent)
 	{
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
@@ -67,7 +74,6 @@ AProjectile::AProjectile()
 	InitialLifeSpan = 5.0f;
 }
 
-// Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -78,7 +84,6 @@ void AProjectile::InitialiseCollisionShape()
 	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 }
 
-// Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -114,6 +119,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 {
 	if (OtherActor != this)
 	{
+		// Collide with orbit objects only if this projectile was shot by the player
 		UClass* HitActorClass = UGameplayStatics::GetObjectClass(Hit.GetActor());
 		if (UKismetMathLibrary::ClassIsChildOf(HitActorClass, AOrbitObject::StaticClass()) && projectileType == ProjectileShooter::PLAYER)
 		{
@@ -123,6 +129,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 			Destroy();
 		}
+		// Collide with the player only if this projectile was fired by an orbit object
 		else if(UKismetMathLibrary::ClassIsChildOf(HitActorClass, ACustomARPawn::StaticClass()) && projectileType == ProjectileShooter::ENEMY)
 		{
 			ACustomARPawn* actor = static_cast<ACustomARPawn*>(OtherActor);
@@ -131,6 +138,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 			Destroy();
 		}
+		// Allow projectiles to destroy each other
 		else if(UKismetMathLibrary::ClassIsChildOf(HitActorClass, AProjectile::StaticClass()))
 		{
 			AProjectile* actor = static_cast<AProjectile*>(OtherActor);

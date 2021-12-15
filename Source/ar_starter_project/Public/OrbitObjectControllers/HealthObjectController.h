@@ -26,6 +26,6 @@ public:
 
 	virtual void OnHitCallback() override;
 
-
+	// Static Basic Health Creation function
 	static AOrbitObject* SpawnHealthObject(AActor* actor, ASphereWorld* sWorld);
 };

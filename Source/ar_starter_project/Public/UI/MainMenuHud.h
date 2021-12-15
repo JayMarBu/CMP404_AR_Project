@@ -20,18 +20,17 @@ class AR_STARTER_PROJECT_API AMainMenuHud : public AHUD
 	GENERATED_BODY()
 	// Members ************************************************************************************
 protected:
-	UPROPERTY();
 	UMainMenuUserWidget* m_mainMenuWidget;
 	UGameUIWidget* m_gameHUDWidget;
 	UDeathScreenWidget* m_deathWidget;
 	USettingsWidget* m_settingsWidget;
 
+	// Debug Widgets
 	TSharedPtr<class SGameplayWidget> GameplayWidget;
 	TSharedPtr<class SWidget> GameplayWidgetContainer;
 
-
 public:
-	
+	// Blueprint widget type containers
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UMainMenuUserWidget> m_mainMenuWidgetClass;
 
@@ -45,7 +44,6 @@ public:
 	TSubclassOf<USettingsWidget> m_settingsWidgetClass;
 
 	// Methods ************************************************************************************
-
 protected:
 	
 	virtual void BeginPlay() override;
@@ -54,6 +52,7 @@ public:
 
 	AMainMenuHud();
 
+	// Show/Hide Menus
 	virtual void ShowMainMenu();
 	virtual void HideMainMenu();
 
@@ -66,17 +65,18 @@ public:
 	virtual void ShowSettingsScreen();
 	virtual void HideSettingsScreen();
 
-	void SpawnEnemy();
-	void SpawnControllerEnemy();
-
+	// Debug menu functions
 	virtual void ShowDebugMenu();
 	virtual void HideDebugMenu();
 
+	void SpawnEnemy();
+	void SpawnControllerEnemy();
+
+	// Update UI methods
 	virtual void SpawnHearts(const unsigned int& num);
 	virtual void SetCurrentHealth(const unsigned int& num);
 	virtual void SetEnemyCount(const unsigned int& currentEnemiesRemaining, const unsigned int& totalEneimes);
 	virtual void SetWaveNum(const unsigned int& num);
-
 	virtual void SetScore(const unsigned int& num);
 
 

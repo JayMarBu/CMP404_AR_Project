@@ -17,36 +17,31 @@ class AR_STARTER_PROJECT_API UBasicEnemyController : public UOrbitObjectControll
 
 	// Members ************************************************************************************
 protected:
+	// General delta time counter
 	float m_timeCounter = 0;
+	FTimerHandle cameraTicker;
 
+	// Shooting cool down variables
 	float m_minShootTime = 4;
 	float m_maxShootTime = 10;
-
+	bool m_hasShotYet = false;
 	float m_shootChance = 1;
 
+	// Vertical Oscillation data
 	float m_oscillationCounter = 0;
-	float m_pingPongCounter = 0;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float m_oscillationSpeed = 1.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float m_oscillationAmplitude = 20;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float m_pingPongSpeed = 0.1f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float m_pingPongAmplitude = 70;
-
-	float m_initialBaseLine;
 	float m_baseLine = 90;
 
+	// Horizontal Oscillation data
+	float m_pingPongCounter = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float m_pingPongSpeed = 0.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float m_pingPongAmplitude = 70;
 	float m_initXval = 0;
-
-	bool m_hasShotYet = false;
-
-	FTimerHandle cameraTicker;
 
 public:
 	
@@ -75,5 +70,6 @@ public:
 
 	virtual void Init(AOrbitObject* obj, int HP);
 
+	// Static Basic Enemy Creation function
 	static AOrbitObject* SpawnBasicEnemy(AActor* actor, ASphereWorld* sWorld, int HP = 1);
 };

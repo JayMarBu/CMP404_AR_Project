@@ -14,10 +14,6 @@ UCLASS()
 class AR_STARTER_PROJECT_API ASphereWorld : public AActor
 {
 	GENERATED_BODY()
-	
-public:
-	// Sets default values for this actor's properties
-	ASphereWorld();
 
 	// Members ************************************************************************************
 public:
@@ -32,6 +28,8 @@ public:
 	ACustomARPawn* m_player;
 
 	// Methods ************************************************************************************
+public:
+	ASphereWorld();
 
 protected:
 	// Called when the game starts or when spawned

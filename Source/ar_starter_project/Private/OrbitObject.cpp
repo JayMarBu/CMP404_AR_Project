@@ -6,34 +6,28 @@
 #include "SphereWorldGameState.h"
 #include "Components/SphereComponent.h"
 
-// Sets default values
 AOrbitObject::AOrbitObject()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Setup Scene COmponent as default
+	// Setup Scene Component as default
 	m_scnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene"));
 	SetRootComponent(m_scnComponent);
 
+	// Setup Mesh Component
 	m_staticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
-
-	// Get mesh from Unreal's Reference  Manager. (Right click on object and Get Reference"
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Game/HandheldARBP/CMP404_AR/enemies/untitled.untitled'"));
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-
 	m_staticMeshComponent->SetStaticMesh(MeshAsset.Object);
 	m_staticMeshComponent->SetupAttachment(RootComponent);
 
+	// Setup Material data
 	static ConstructorHelpers::FObjectFinder<UMaterial> FoundMaterial(TEXT("Material'/Game/HandheldARBP/CMP404_AR/enemies/EnemyMaterial.EnemyMaterial'"));
 	if (FoundMaterial.Succeeded())
-	{
 		m_storedMaterial = FoundMaterial.Object;
-	}
 	m_dynamicMaterialInst = UMaterialInstanceDynamic::Create(m_storedMaterial, m_staticMeshComponent);
-
 	m_staticMeshComponent->SetMaterial(0, m_dynamicMaterialInst);
 
+	// Setup collision component
 	if (!m_collisionComponent)
 	{
 		m_collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
@@ -47,11 +41,9 @@ AOrbitObject::AOrbitObject()
 	}
 }
 
-// Called when the game starts or when spawned
 void AOrbitObject::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos, int HP)
@@ -61,15 +53,13 @@ void AOrbitObject::Init(ASphereWorld* sphereWorld, FVector startPos, int HP)
 	m_initLocation = sphereWorld->m_player->GetActorLocation();
 
 	m_orbitTransform = startPos;
-
-	FVector newLoc = m_sphereWorld->GetActorLocation() + m_sphereWorld->GeneratePositionOnSphere(m_initLocation);
-
+	
 	FacePlayer();
 }
 
 void AOrbitObject::FacePlayer()
 {
-	if (!m_sphereWorld )//|| !m_sphereWorld->m_player)
+	if (!m_sphereWorld )
 		return;
 
 	// face the player object
@@ -82,7 +72,7 @@ void AOrbitObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Allow controller component to update actor
+	// Allow controller component to update actor if it exists
 	if(hasControllerComponent)
 		return;
 

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "OrbitObject.h"
+#include "FMODEvent.h"
+#include "FMODBus.h"
 #include "SphereWorldGameState.generated.h"
 
 class ASphereWorld;
@@ -29,6 +31,8 @@ enum class EnemyType
 	Health
 };
 
+// Wave Spawner Class *******************************************************************************************************************************
+// - helper class to manage wave spawning
 class WaveSpawner
 {
 	// Members ************************************************************************************
@@ -64,15 +68,11 @@ public:
 	EnemyType SpawnEnemy();
 
 	void Swap(TPair<EnemyType, float>* xp, TPair<EnemyType, float>* yp);
-
-	// A function to implement bubble sort
 	void BubbleSort(TArray<TPair<EnemyType, float>> arr, int n);
-
 };
 
-/**
- * 
- */
+// Sphere World Game State Class ********************************************************************************************************************
+// - Class to act as a globally accessible gameplay manager object
 UCLASS()
 class AR_STARTER_PROJECT_API ASphereWorldGameState : public AGameStateBase
 {
@@ -80,62 +80,91 @@ class AR_STARTER_PROJECT_API ASphereWorldGameState : public AGameStateBase
 
 	// Members ************************************************************************************
 public:
-
 	FTimerHandle m_spawningTicker;
 
+	// FMOD Bus data
+	UPROPERTY(EditDefaultsOnly)
+	UFMODBus* Bus;
+
+	float m_volume = 1;
+	bool m_isMuted = false;
+
 protected:
+	// Gameplay data
 	ASphereWorld* m_sphereWorld;
-
 	TArray<AOrbitObject*> m_enemies;
+	ACustomARPawn* m_pawn;
+	WaveSpawner m_waveSpawner;
 
+	// Game state flag
 	ARGameStates m_gameState;
 
-	ACustomARPawn* m_pawn;
-
+	// UI Data
 	AMainMenuHud* m_hud = nullptr;
-
 	unsigned int m_score;
 
-	WaveSpawner m_waveSpawner;
+	// FMOD Events
+	UFMODEvent* EnemyShootSoundEvent;
+	UFMODEvent* EnemyDamageSoundEvent;
+	UFMODEvent* EnemyDeathSoundEvent;
+	UFMODEvent* EnemySpawnSoundEvent;
+	UFMODEvent* HealSoundEvent;
 
 	// Methods ************************************************************************************
 public:
 	ASphereWorldGameState();
 
+	// Sphere World methods
 	inline ASphereWorld* GetSphereWorld() const { return m_sphereWorld; }
 	inline void SetSphereWorld(ASphereWorld* newSphereWorld) { m_sphereWorld = newSphereWorld; }
-
 	ASphereWorld* CreateSphereWorld(FVector worldPosition, FTransform trans);
 
+	// Getters
+	inline ARGameStates GetGameState() const { return m_gameState; }
+	ACustomARPawn* GetPawn();
+	AMainMenuHud* GetHUD();
+	inline virtual unsigned int GetScore() const { return m_score; }
+
+	// Setters
+	void SetGameState(const ARGameStates& state);
+	void SetPawn(ACustomARPawn* pawn);
+
+	// Debug Methods
 	void SpawnEnemy();
 	void SpawnControllerEnemy();
 
-	inline ARGameStates GetGameState() const { return m_gameState;}
-	void SetGameState(const ARGameStates& state);
-
-	void SetPawn(ACustomARPawn* pawn);
-	ACustomARPawn* GetPawn();
-
-	AMainMenuHud* GetHUD();
-
+	// Cleanup Methods
 	void CleanupSphereWorld();
 	void CleanupEnemies();
 	void CleanupGame();
 
+	// UI Update methods
 	virtual void AddScore(const unsigned int& in_pts);
 	virtual void SetScore(const unsigned int& in_pts);
 
 	virtual void AddHealth(const unsigned int& hp);
 	virtual void SetHealth(const unsigned int& hp);
 
-	inline virtual unsigned int GetScore() const { return m_score; }
-
+	// Static global getter methods
 	static ASphereWorldGameState* Get(AActor* actor);
 	static ASphereWorldGameState* Get(class UUserWidget* actor);
 
+	// Wave control methods
 	void SpawnNewEnemy();
 	void RemoveEnemy(AOrbitObject* oObject);
 	void NextWave();
+
+	// Sound related methods
+	void PlayEnemyShootSound(AActor* actor);
+	void PlayEnemyDamageSound(AActor* actor);
+	void PlayEnemyDeathSound(AActor* actor);
+	void PlayHealSound(AActor* actor);
+
+	void SetVolume(float vol);
+	void SetMuteState(bool isMuted);
+
+	float GetVolume();
+	bool GetMuteState();
 
 protected:
 

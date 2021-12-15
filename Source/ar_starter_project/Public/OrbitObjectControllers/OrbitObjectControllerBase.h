@@ -31,15 +31,12 @@ protected:
 
 	// Methods ************************************************************************************
 public:	
-	// Sets default values for this component's properties
 	UOrbitObjectControllerBase();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION()
@@ -47,6 +44,7 @@ public:
 
 	virtual void Init(AOrbitObject* obj, int HP);
 
+	// Static Creation Function
 	static AOrbitObject* SpawnBaseController(AActor* actor, ASphereWorld* sWorld);
 
 };

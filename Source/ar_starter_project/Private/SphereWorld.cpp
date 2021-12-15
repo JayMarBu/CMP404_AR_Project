@@ -5,24 +5,20 @@
 #include "DrawDebugHelpers.h"
 #include "Math/UnrealMathUtility.h"
 
-// Sets default values
 ASphereWorld::ASphereWorld()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	m_scnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("sphere world scene component"));
 	RootComponent = m_scnComponent;
 }
 
-// Called when the game starts or when spawned
 void ASphereWorld::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
-// Called every frame
 void ASphereWorld::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

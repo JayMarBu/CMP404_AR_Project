@@ -36,21 +36,40 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AProjectile> ProjectileClass;
 
+	// Timer methods 
 	FTimerHandle cameraTicker;
 	float cameraNotifyLoopTime;
 
+	// Sphere world reference
 	ASphereWorld* m_sphereWorld;
 
+	// Camera position container
 	FVector m_viewLocation;
 
+	// HP Methods
 	UPROPERTY(EditDefaultsOnly)
 	unsigned int m_maxHP = 10;
-
 	UPROPERTY(EditAnywhere)
 	unsigned int m_currentHP;
 
+	// SFX
 	UPROPERTY(EditAnywhere)
-	UFMODEvent* TestEvent;
+	UFMODEvent* ShootSoundEvent;
+
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* DamageSoundEvent;
+
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* DieSoundEvent;
+
+	UPROPERTY(EditAnywhere)
+	UFMODEvent* WaveCompleteSoundEvent;
+
+	// Shooting variables
+	float m_cooldownTime = 0.2f;
+	float m_cooldowntimer = 0;
+
+	bool m_canShoot = true;
 
 	// Methods ************************************************************************************
 public:
@@ -82,5 +101,7 @@ public:
 	virtual inline unsigned int GetCurrentHealth() const { return m_currentHP;} 
 
 	virtual void SetCurrentHealth(const unsigned int& hp);
+
+	virtual void PlayWaveCompleteSound();
 
 };

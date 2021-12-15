@@ -121,11 +121,6 @@ void AMainMenuHud::ShowDebugMenu()
 	{
 		GameplayWidget = SNew(SGameplayWidget).OwningHUD(this);
 		GEngine->GameViewport->AddViewportWidgetContent(SAssignNew(GameplayWidgetContainer, SWeakWidget).PossiblyNullContent(GameplayWidget.ToSharedRef()));
-
-		if (PlayerOwner)
-		{
-			//PlayerOwner->SetInputMode(FInputModeUIOnly());
-		}
 	}
 }
 
@@ -134,11 +129,6 @@ void AMainMenuHud::HideDebugMenu()
 	if (GEngine && GEngine->GameViewport && GameplayWidgetContainer.IsValid())
 	{
 		GEngine->GameViewport->RemoveViewportWidgetContent(GameplayWidgetContainer.ToSharedRef());
-
-		if (PlayerOwner)
-		{
-			//PlayerOwner->SetInputMode(FInputModeGameAndUI());
-		}
 	}
 }
 

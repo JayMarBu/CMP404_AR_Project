@@ -66,6 +66,4 @@ public:
 
 	UFUNCTION()
 	void MenuButtonPressed();
-
-	//UGameUIWidget(const FObjectInitializer& ObjectInitializer);
 };

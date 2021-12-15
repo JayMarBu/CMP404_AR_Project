@@ -20,21 +20,19 @@ void UGameUIWidget::NativeConstruct()
 
 void UGameUIWidget::SpawnHearts(const unsigned int& num)
 {
-	//m_hearts.clear();
+	m_hearts.Empty();
 
 	if(!m_heartWidgetClass)
 		return;
 
-
+	// Generate Heart UI objects and add them to horizontal list
 	FSlateChildSize slateSize{};
 	for (unsigned int i = 0; i < num; i++)
 	{
 		UUserWidget* widget = CreateWidget<UUserWidget>(GetWorld(), m_heartWidgetClass);
 		if (widget)
 		{
-			//widget->Slot;
 			m_hearts.Add(widget);
-			//widget->AddToViewport();
 			HealthBar->AddChildToHorizontalBox(widget)->SetSize(slateSize);
 		}
 		
@@ -43,6 +41,7 @@ void UGameUIWidget::SpawnHearts(const unsigned int& num)
 
 void UGameUIWidget::SetHealth(const unsigned int& num)
 {
+	// Set health bar colour based on player health
 	for (unsigned int i = 0; i < (unsigned int)m_hearts.Num(); i++)
 	{
 		if( i < num)

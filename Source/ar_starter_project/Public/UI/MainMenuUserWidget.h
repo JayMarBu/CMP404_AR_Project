@@ -19,17 +19,11 @@ class AR_STARTER_PROJECT_API UMainMenuUserWidget : public UUserWidget
 	GENERATED_BODY()
 	// Members ************************************************************************************
 protected:
-	//UPROPERTY(meta = (BindWidget))
-	//UTextBlock* HighscoreText;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* PlayButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* OptionsButton;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* InstructionsButton;
 
 	UPROPERTY(EditAnywhere)
 	UFMODEvent* TestEvent;
@@ -44,9 +38,6 @@ public:
 
 	UFUNCTION()
 		void PlayButtonPress();
-
-	UFUNCTION()
-		void InfoButtonPress();
 
 	UFUNCTION()
 		void SettingsButtonPress();

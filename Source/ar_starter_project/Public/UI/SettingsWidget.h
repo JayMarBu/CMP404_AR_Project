@@ -27,15 +27,6 @@ protected:
 	UButton* OptionsButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* InstructionsButton;
-
-	UPROPERTY(meta = (BindWidget))
-	UCheckBox* MuteVFXToggle;
-
-	UPROPERTY(meta = (BindWidget))
-	USlider* VFXSlider;
-
-	UPROPERTY(meta = (BindWidget))
 	UCheckBox* MuteMusicToggle;
 
 	UPROPERTY(meta = (BindWidget))
@@ -55,8 +46,17 @@ public:
 	void PlayButtonPress();
 
 	UFUNCTION()
-	void InfoButtonPressed();
-
-	UFUNCTION()
 	void SettingsButtonPressed();
+
+	UFUNCTION(BlueprintCallable, Category = "Settings Widget")
+	void OnSliderChange(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Settings Widget")
+	void OnToggle(bool bIsChecked);
+
+	UFUNCTION(BlueprintCallable, Category = "Settings Widget")
+	float GetVolume();
+
+	UFUNCTION(BlueprintCallable, Category = "Settings Widget")
+	bool GetMuteState();
 };

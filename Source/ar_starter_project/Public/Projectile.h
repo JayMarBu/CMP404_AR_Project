@@ -37,11 +37,9 @@ public:
 		ProjectileShooter projectileType;
 	// Methods ************************************************************************************
 public:	
-	// Sets default values for this actor's properties
 	AProjectile();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	FVector velocity;
@@ -49,7 +47,6 @@ protected:
 	virtual void InitialiseCollisionShape();
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void FireInDirection(FVector ShootDirection, ASphereWorld* in_sphereWorld, ProjectileShooter in_projectileType, const float& speed = 300.0f);

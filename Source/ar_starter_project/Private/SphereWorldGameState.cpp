@@ -14,16 +14,24 @@
 #include <Blueprint/UserWidget.h>
 #include <Kismet/GameplayStatics.h>
 #include "OrbitObjectControllers/HealthObjectController.h"
+#include "FMODBlueprintStatics.h"
 
 ASphereWorldGameState::ASphereWorldGameState()
 {
 	m_gameState = ARGameStates::Main_Menu;
 
 	m_waveSpawner.Init(this);
+
+	EnemyShootSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/shoot"));
+	EnemyDamageSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/enemyHit2"));
+	HealSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/Heal"));
+	EnemyDeathSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/enemyHit"));
+	EnemySpawnSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/Enemy Spawn"));
 }
 
 ASphereWorld* ASphereWorldGameState::CreateSphereWorld(FVector worldPosition, FTransform trans)
 {
+	// Cleanup game before creating new sphere world
 	CleanupSphereWorld();
 
 	worldPosition = trans.GetTranslation();
@@ -65,12 +73,13 @@ void ASphereWorldGameState::SetGameState(const ARGameStates& state)
 {
 	m_gameState = state;
 
+	// Set pawn and HUD objects if they aren't set
 	if(!m_pawn)
 		SetPawn(GetWorld()->GetFirstPlayerController()->GetPawn<ACustomARPawn>());
-
 	if (!m_hud)
 		m_hud = Cast<AMainMenuHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
+	// Run State transition methods
 	switch (m_gameState)
 	{
 	case ARGameStates::Gameplay:
@@ -93,35 +102,28 @@ void ASphereWorldGameState::SetGameState(const ARGameStates& state)
 
 void ASphereWorldGameState::BeginGame()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Game Beginning...")));
+	// Cleanup previous game before starting new one
 	CleanupGame();
 
+	// destroy uneeded UI elements
 	m_hud->HideMainMenu();
 	m_hud->HideDeathScreen();
 	m_hud->HideSettingsScreen();
 
-	//m_hud->ShowDebugMenu();
+	// create Gameplay UI objects
 	m_hud->ShowGameHUD();
 
-	/*GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, UGameplayStatics::GetPlatformName());
-
-	FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
-	if (UGameplayStatics::GetPlatformName() == "PLATFORM_ANDROID" && status.Status != EARSessionStatus::Running)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Error starting AR session")));
-		FString errorMessage = status.AdditionalInfo;
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, errorMessage);
-		MainMenu();
-	}*/
-
+	// Init pawn
 	m_pawn->InitGame();
 
+	// Reset game data
 	m_hud->SpawnHearts(m_pawn->GetMaxHealth());
 	m_hud->SetCurrentHealth(m_pawn->GetMaxHealth());
 
 	m_gameState = ARGameStates::Gameplay;
 	SetScore(0);
 
+	// Reset wave spawner
 	m_waveSpawner.Reset();
 	m_waveSpawner.WaveStart();
 }
@@ -185,6 +187,7 @@ void ASphereWorldGameState::CleanupSphereWorld()
 	m_sphereWorld->Destroy();
 	m_sphereWorld = nullptr;
 	
+	// Make sure pawn always has valid reference to sphere world
 	if(m_pawn)
 		m_pawn->SetSphereWorld(nullptr);
 }
@@ -210,12 +213,6 @@ void ASphereWorldGameState::CleanupGame()
 {
 	CleanupSphereWorld();
 	CleanupEnemies();
-
-	//FARSessionStatus status = UARBlueprintLibrary::GetARSessionStatus();
-
-	//if(status.Status == EARSessionStatus::Running)
-	//	UARBlueprintLibrary::StopARSession();
-
 }
 
 void ASphereWorldGameState::AddScore(const unsigned int& in_pts)
@@ -260,8 +257,10 @@ ASphereWorldGameState* ASphereWorldGameState::Get(UUserWidget* widget)
 
 void ASphereWorldGameState::SpawnNewEnemy()
 {
+	// Calculate enemy type based on spawn weights
 	EnemyType type = m_waveSpawner.SpawnEnemy();
 
+	// Spawn relevant enemy type
 	switch (type)
 	{
 	case EnemyType::Basic:
@@ -278,6 +277,7 @@ void ASphereWorldGameState::SpawnNewEnemy()
 		break;
 	}
 
+	// Tick wave spawner
 	m_waveSpawner.WaveTick();
 }
 
@@ -286,19 +286,61 @@ void ASphereWorldGameState::RemoveEnemy(AOrbitObject* oObject)
 	m_waveSpawner.waveEnemyCountCurrent--;
 	m_hud->SetEnemyCount(m_waveSpawner.waveEnemyCountCurrent, m_waveSpawner.waveEnemyCount);
 	m_enemies.Remove(oObject);
-	//SetScore(m_enemies.Num());
 }
 
 void ASphereWorldGameState::NextWave()
-{
-
+{	
+	// start new wave if all enemies have been defeated
 	if(m_waveSpawner.waveEnemyCountCurrent > 0)
 		m_waveSpawner.WaveTick();
 	else
+	{
+		m_pawn->PlayWaveCompleteSound();
 		m_waveSpawner.WaveStart();
-	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("test")));
+	}
 }
 
+void ASphereWorldGameState::PlayEnemyShootSound(AActor* actor)
+{
+	UFMODBlueprintStatics::PlayEventAtLocation(actor, EnemyShootSoundEvent, actor->GetTransform(), true);
+}
+
+void ASphereWorldGameState::PlayEnemyDamageSound(AActor* actor)
+{
+	UFMODBlueprintStatics::PlayEventAtLocation(actor, EnemyDamageSoundEvent, actor->GetTransform(), true);
+}
+
+void ASphereWorldGameState::PlayEnemyDeathSound(AActor* actor)
+{
+	UFMODBlueprintStatics::PlayEventAtLocation(actor, EnemyDeathSoundEvent, actor->GetTransform(), true);
+}
+
+void ASphereWorldGameState::PlayHealSound(AActor* actor)
+{
+	UFMODBlueprintStatics::PlayEventAtLocation(actor, HealSoundEvent, actor->GetTransform(), true);
+}
+
+void ASphereWorldGameState::SetVolume(float vol)
+{
+	m_volume = vol;
+	UFMODBlueprintStatics::BusSetVolume(Bus, vol);
+}
+
+void ASphereWorldGameState::SetMuteState(bool isMuted)
+{
+	m_isMuted = isMuted;
+	UFMODBlueprintStatics::BusSetMute(Bus, isMuted);
+}
+
+float ASphereWorldGameState::GetVolume()
+{
+	return m_volume;
+}
+
+bool ASphereWorldGameState::GetMuteState()
+{
+	return m_isMuted;
+}
 
 // **************************************************************************************************************************************************
 // Wave Spawner Methods																																*
@@ -308,23 +350,25 @@ void WaveSpawner::Init(ASphereWorldGameState* in_gameState)
 {
 	gameState = in_gameState;
 
+	// Initialise spawn weights
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Basic, 65));
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Bulky, 50));
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Tank, 20));
 	spawnRates.Add(TPair<EnemyType, float>(EnemyType::Health, 25));
 
+	// set total chance
 	totalChance = 0;
 	for (const TPair<EnemyType, float>& pair : spawnRates)
 	{
 		totalChance+= pair.Value;
 	}
 
+	// sort weights list from highest to lowest
 	BubbleSort(spawnRates, spawnRates.Num());
 }
 
 void WaveSpawner::Reset()
 {
-	
 	waveNumber = 0;
 	waveEnemyCount = 6;
 	m_waveEnemyTrueCount = 6;
@@ -334,16 +378,21 @@ void WaveSpawner::Reset()
 
 void WaveSpawner::NewWave()
 {
+	// reset spawn counter
 	enemiesSpawned = 0;
+
+	//	increment wave counter
 	waveNumber++;
 
+	// calculate enemy count
 	m_waveEnemyTrueCount = m_waveEnemyTrueCount + ((float)waveNumber*0.33f);
-
 	waveEnemyCount = FMath::RoundToInt(m_waveEnemyTrueCount);
 	waveEnemyCountCurrent = waveEnemyCount;
 
+	// calculate spawn time
 	enemySpawnTime = enemySpawnTime - (1/((float)waveEnemyCount*0.33f));
 
+	// update HUD
 	gameState->GetHUD()->SetEnemyCount(waveEnemyCountCurrent,waveEnemyCount);
 	gameState->GetHUD()->SetWaveNum(waveNumber);
 }
@@ -351,34 +400,33 @@ void WaveSpawner::NewWave()
 void WaveSpawner::WaveStart()
 {
 	NewWave();
-
 	WaveTick();
 }
 
 void WaveSpawner::WaveTick()
 {
+	// set timer to spawn new enemy if enemies still need to be spawned
 	if (enemiesSpawned < waveEnemyCount)
 	{
 		gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::SpawnNewEnemy, enemySpawnTime, false, enemySpawnTime);
 		return;
 	}
 
+	// attempt to start next wave when all enemies are defeated
 	gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::NextWave, 2, false, 2);
 }
 
 EnemyType WaveSpawner::SpawnEnemy()
 {
+	// increment spawn counter
 	enemiesSpawned++;
 
+	// Calculate enemy type based on spawn weights
 	float r = FMath::RandRange(0.0f,totalChance);
-
 	for (const TPair<EnemyType, float>& pair : spawnRates)
 	{
 		if(r <= pair.Value)
-		{
 			return pair.Key;
-		}
-
 		r-= pair.Value;
 	}
 

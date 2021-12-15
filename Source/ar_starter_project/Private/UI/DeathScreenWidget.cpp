@@ -12,9 +12,11 @@ void UDeathScreenWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// Initialise button callbacks
 	PlayButton->OnClicked.AddUniqueDynamic(this, &UDeathScreenWidget::PlayButtonPress);
 	ReturnButton->OnClicked.AddUniqueDynamic(this, &UDeathScreenWidget::ReturnButtonPress);
 
+	// Initialise Sound
 	TestEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/UI_Sounds/switch_006"));
 }
 

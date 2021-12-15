@@ -11,9 +11,6 @@
 #include"Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "Components/SphereComponent.h"
 #include "UI/MainMenuHud.h"
-//#include "Kismet/KismetMathLibrary.h"
-
-//#include "FMODEvent.h"
 #include "FMODBlueprintStatics.h"
 
 
@@ -21,13 +18,11 @@
 #define PRINT_DEBUG_LINE(_line_, _colour_) PRINT_DEBUG_LINE_TIME(_line_, _colour_, 10)
 
 
-// Sets default values
 ACustomARPawn::ACustomARPawn()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Setup Scene COmponent as default
+	//Setup Scene Component as default
 	ScnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Default Scene"));
 	RootComponent = ScnComponent;
 
@@ -35,55 +30,65 @@ ACustomARPawn::ACustomARPawn()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	CameraComponent->SetupAttachment(RootComponent);
 
-
+	// Setup Collision Component as default
 	if (!CollisionComponent)
 	{
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Player"));
 
 		float radius = 15.0f;
 		CollisionComponent->InitSphereRadius(radius);
-
 		CollisionComponent->SetupAttachment(ScnComponent);
 	}
 
+	// Set Projectile type
 	ProjectileClass = AProjectile::StaticClass();
 
 	// Timer Looping every 4 seconds
 	cameraNotifyLoopTime = 4.0f;
-
-
 }
 
-// Called when the game starts or when spawned
 void ACustomARPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("Hello world")), true, true, FLinearColor(0, 0.66, 1, 1), 5);
 
+	// Initialise AR Session on startup
 	UARSessionConfig* Config = NewObject<UARSessionConfig>();
 	UARBlueprintLibrary::StartARSession(Config);
 
+	// Set game state pawn reference
 	GetWorld()->GetGameState<ASphereWorldGameState>()->SetPawn(this);
 
-	TestEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Debug/Wet_Fart_Meme_-_Sound_Effect_HD"));
+	// Init FMOD events
+	ShootSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/shoot"));
+	DamageSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/hit"));
+	DieSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/death"));
+	WaveCompleteSoundEvent = UFMODBlueprintStatics::FindEventByName(FString("event:/Game_Sounds/mixkit-unlock-game-notification-253"));
 }
 
-// Called every frame
 void ACustomARPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	if(GetWorld()->GetGameState<ASphereWorldGameState>()->GetGameState() != ARGameStates::Gameplay)
 		return;
+	
+	// Reset shot cooldown timer
+	if(!m_canShoot)
+	{
+		m_cooldowntimer += DeltaTime;
+		if (m_cooldowntimer >= m_cooldownTime)
+		{
+			m_canShoot = true;
+		}
+	}
 
+	// Calculate view position
 	FRotator camRot;
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(m_viewLocation, camRot);
 	CollisionComponent->SetWorldLocation(m_viewLocation);
 }
 
-// Called to bind functionality to input
 void ACustomARPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -103,6 +108,10 @@ FVector ACustomARPawn::GetViewLocation()
 
 void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVector screenPos)
 {
+	if(!m_canShoot)
+		return;
+
+	// Calculate screen space shot vector
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
 	FVector worldPosition;
 	FVector worldDirection;
@@ -110,28 +119,34 @@ void ACustomARPawn::OnScreenTouch(const ETouchIndex::Type fingerIndex, const FVe
 
 	if (ProjectileClass)
 	{
+		// Calculate projectile spawn position
 		FRotator camRot;
 		FVector loc;
 		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraViewPoint(loc, camRot);
 
+		// Set spawn parameters
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetInstigator();
 
+		// Create projectile Actor
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, loc, camRot, SpawnParams);
 		if (Projectile)
 		{
-			FVector LaunchDirection = worldDirection;//camRot.Vector();
-			Projectile->FireInDirection(LaunchDirection, m_sphereWorld, ProjectileShooter::PLAYER);
+			// Init projectile
+			Projectile->FireInDirection(worldDirection, m_sphereWorld, ProjectileShooter::PLAYER);
 
-			UFMODBlueprintStatics::PlayEventAtLocation(this, TestEvent, GetTransform(), true);
+			UFMODBlueprintStatics::PlayEventAtLocation(this, ShootSoundEvent, GetTransform(), true);
+
+			// Set cool down
+			m_cooldowntimer = 0;
+			m_canShoot = false;
 		}
 	}
 }
 
 void ACustomARPawn::Hit()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Magenta, FString::Printf(TEXT("Ive been hit!!")));
 	m_currentHP--;
 
 	if(m_currentHP <= 0)
@@ -139,7 +154,12 @@ void ACustomARPawn::Hit()
 		OnDeath();
 		return;
 	}
+
+	// Update UI
 	ASphereWorldGameState::Get(this)->GetHUD()->SetCurrentHealth(m_currentHP);
+
+	// Play sound
+	UFMODBlueprintStatics::PlayEventAtLocation(this, DamageSoundEvent, GetTransform(), true);
 }
 
 void ACustomARPawn::InitGame()
@@ -151,10 +171,12 @@ void ACustomARPawn::InitGame()
 
 void ACustomARPawn::OnDeath()
 {
+	// Play sound
+	UFMODBlueprintStatics::PlayEventAtLocation(this, DieSoundEvent, GetTransform(), true);
+
+	// Change game state
 	ASphereWorldGameState* gs = GetWorld()->GetGameState<ASphereWorldGameState>();
-
 	gs->GetHUD()->SetCurrentHealth(0);
-
 	gs->SetGameState(ARGameStates::Death_menu);
 }
 
@@ -162,4 +184,9 @@ void ACustomARPawn::SetCurrentHealth(const unsigned int& hp)
 {
 	 m_currentHP = (hp > m_maxHP) ? m_maxHP : hp;
 	 ASphereWorldGameState::Get(this)->GetHUD()->SetCurrentHealth(m_currentHP);
+}
+
+void ACustomARPawn::PlayWaveCompleteSound()
+{
+	UFMODBlueprintStatics::PlayEventAtLocation(this, WaveCompleteSoundEvent, GetTransform(), true);
 }
