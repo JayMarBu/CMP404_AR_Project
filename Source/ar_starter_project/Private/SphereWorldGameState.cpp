@@ -390,7 +390,7 @@ void WaveSpawner::NewWave()
 	waveEnemyCountCurrent = waveEnemyCount;
 
 	// calculate spawn time
-	enemySpawnTime = enemySpawnTime - (1/((float)waveEnemyCount*0.33f));
+	enemySpawnTime = enemySpawnTime - (1/((float)waveEnemyCount*0.1f));
 
 	// update HUD
 	gameState->GetHUD()->SetEnemyCount(waveEnemyCountCurrent,waveEnemyCount);
@@ -406,14 +406,16 @@ void WaveSpawner::WaveStart()
 void WaveSpawner::WaveTick()
 {
 	// set timer to spawn new enemy if enemies still need to be spawned
-	if (enemiesSpawned < waveEnemyCount)
+	if (enemiesSpawned >= waveEnemyCount)
+	{
+		// attempt to start next wave when all enemies are defeated
+		gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::NextWave, 2, false, 2);
+	}
+	else
 	{
 		gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::SpawnNewEnemy, enemySpawnTime, false, enemySpawnTime);
-		return;
 	}
 
-	// attempt to start next wave when all enemies are defeated
-	gameState->GetWorldTimerManager().SetTimer(gameState->m_spawningTicker, gameState, &ASphereWorldGameState::NextWave, 2, false, 2);
 }
 
 EnemyType WaveSpawner::SpawnEnemy()
